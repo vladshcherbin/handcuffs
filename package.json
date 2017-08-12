@@ -1,0 +1,9 @@
+{
+  "name": "handcuffs",
+  "version": "0.0.1",
+  "description": "Validation library",
+  "main": "index.js",
+  "repository": "https://github.com/VladShcherbin/handcuffs",
+  "author": "Vlad Shcherbin",
+  "license": "MIT"
+}
