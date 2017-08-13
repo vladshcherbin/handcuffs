@@ -25,6 +25,10 @@ describe('required', () => {
     expect(required(null)).toBe(false)
   })
 
+  test('should be false when no value is provided', () => {
+    expect(required()).toBe(false)
+  })
+
   test('should be false when value is an empty array', () => {
     expect(required([])).toBe(false)
   })
