@@ -4,7 +4,7 @@
   "description": "Validation library",
   "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon --exec babel-node src",
+    "run:example": "nodemon --watch example --watch src --exec babel-node example",
     "test": "jest"
   },
   "repository": "https://github.com/VladShcherbin/handcuffs",
