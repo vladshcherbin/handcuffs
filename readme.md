@@ -8,9 +8,9 @@ Validation library
 
 ### Available Rules
 
-| Rule | Description |
-| --- | --- |
-| accepted | The field under validation must be `'yes'`, `'on'`, `1`, or `true`. |
-| array | The field under validation must an array. |
-| boolean | The field under validation must be a boolean value `true` or `false`. |
-| required | The field under validation must be present and not empty. |
+| Rule | Example | Description |
+| --- | --- | --- |
+| accepted | `{ rules: 'accepted' }` | The field under validation must be `'yes'`, `'on'`, `1`, or `true`. |
+| array | `{ permissions: 'array' }` | The field under validation must be an array. |
+| boolean | `{ isVisible: 'boolean' }` | The field under validation must be a boolean value `true` or `false`. |
+| required | `{ name: 'required' }` | The field under validation must be present and not empty. |
