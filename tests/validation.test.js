@@ -54,7 +54,7 @@ describe('Validation', () => {
     expect(validate(data, rules)).toMatchObject(expectedResult)
   })
 
-  test('should return errors when array is incorrect', () => {
+  test('should return errors when array values are incorrect', () => {
     const data = ['', [1], { name: 'Rex' }]
     const rules = {
       '*': 'array',
@@ -70,6 +70,32 @@ describe('Validation', () => {
       '1.name': ['This field is required'],
       '1.0.name': ['This field is required']
     }
+
+    expect(validate(data, rules)).toMatchObject(expectedResult)
+  })
+
+  test('should return no errors when object fields are correct', () => {
+    const data = {
+      name: 'Jack',
+      wife: {
+        name: 'Susan'
+      }
+    }
+    const rules = {
+      name: 'required',
+      'wife.name': 'required'
+    }
+    const expectedResult = {}
+
+    expect(validate(data, rules)).toMatchObject(expectedResult)
+  })
+
+  test('should return no errors when array values are correct', () => {
+    const data = [{ name: 'Rex' }, { name: 'Tiger' }]
+    const rules = {
+      '*.name': 'required'
+    }
+    const expectedResult = {}
 
     expect(validate(data, rules)).toMatchObject(expectedResult)
   })
