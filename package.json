@@ -1,6 +1,6 @@
 {
   "name": "handcuffs",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Validation library",
   "scripts": {
     "example": "nodemon --watch example --watch src --exec babel-node example",
