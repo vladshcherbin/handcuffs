@@ -3,18 +3,16 @@ import { addRule, validate } from '../src'
 addRule('email', () => false)
 
 const data = {
-  name: '',
+  name: 'Jack',
   wife: {
     name: 'Susan'
-  },
-  pets: [[1], 2, { name: 'ss' }]
+  }
 }
 
 const rules = {
-  pets: 'required',
-  'pets.*': 'array',
-  'pets.*.name': 'required',
-  'pets.*.*': 'required'
+  name: 'required',
+  'wife.name': 'required',
+  pets: 'required|array'
 }
 
 validate(data, rules)
