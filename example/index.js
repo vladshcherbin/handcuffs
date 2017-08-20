@@ -1,26 +1,20 @@
-import { validate } from '../src'
+import { addRule, validate } from '../src'
 
-// addRule('email', () => false)
+addRule('email', () => false)
 
 const data = {
-  name: 'Jack',
+  name: '',
   wife: {
     name: 'Susan'
   },
-  pets: [
-    { name: 'Rex' },
-    { surname: 'Tiger' }
-  ],
-  toys: [['one', 'two'], ['three'], [[]]]
+  pets: [[1], 2, { name: 'ss' }]
 }
 
-
 const rules = {
-  name: 'required',
-  'wife.surname': 'required',
-  'pets.*': 'required',
+  pets: 'required',
+  'pets.*': 'array',
   'pets.*.name': 'required',
-  'toys.*.*': 'required'
+  'pets.*.*': 'required'
 }
 
 validate(data, rules)
