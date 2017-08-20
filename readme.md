@@ -1,10 +1,43 @@
 # Handcuffs
 
+[![Build Status](https://travis-ci.org/VladShcherbin/handcuffs.svg?branch=master)](https://travis-ci.org/VladShcherbin/handcuffs)
+
 Validation library
 
 ## Installation
 
+Install using npm or yarn:
+
+```terminal
+npm install handcuffs
+```
+
+```terminal
+yarn add handcuffs
+```
+
 ## Usage
+
+Basic usage example:
+
+```js
+import { validate } from 'handcuffs'
+
+const data = {
+  name: 'Jack',
+  wife: {
+    name: 'Susan'
+  }
+}
+
+const rules = {
+  name: 'required',
+  'wife.name': 'required',
+  pets: 'required|array'
+}
+
+const validationErrors = validate(data, rules)
+```
 
 ### Available Rules
 
