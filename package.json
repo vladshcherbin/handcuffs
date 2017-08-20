@@ -2,11 +2,15 @@
   "name": "handcuffs",
   "version": "0.0.1",
   "description": "Validation library",
-  "main": "src/index.js",
   "scripts": {
     "example": "nodemon --watch example --watch src --exec babel-node example",
     "test": "jest"
   },
+  "main": "src/index.js",
+  "files": [
+    "*.md",
+    "src"
+  ],
   "repository": "https://github.com/VladShcherbin/handcuffs",
   "devDependencies": {
     "babel-cli": "^6.24.1",
