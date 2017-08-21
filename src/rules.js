@@ -39,6 +39,13 @@ export function getRule(ruleTitle) {
   }
 }
 
+// Check required params for a rule
+export function requireParamsCount(count, params, rule) {
+  if (!Array.isArray(params) || params.length < count) {
+    throw new Error(`Validation rule "${rule}" requires at least ${count} parameters`)
+  }
+}
+
 // Split rule title and params, located after ':', divided by ','
 function extractRuleParams(rule) {
   const [ruleTitle, ruleParams] = rule.split(':')

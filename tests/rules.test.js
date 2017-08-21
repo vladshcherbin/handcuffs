@@ -1,4 +1,4 @@
-import { addRule, formatRules, getRule } from '../src/rules'
+import { addRule, formatRules, getRule, requireParamsCount } from '../src/rules'
 
 describe('Validation rules', () => {
   test('should add new validation rule', () => {
@@ -38,6 +38,18 @@ describe('Validation rules', () => {
     const parsedRules = { password: [{ title: 'between', params: ['5', '10'] }] }
 
     expect(formatRules(rules)).toMatchObject(parsedRules)
+  })
+
+  test('should throw error if rule params count is not enough', () => {
+    expect(() => {
+      requireParamsCount(2, [1], 'between')
+    }).toThrowError('Validation rule "between" requires at least 2 parameters')
+  })
+
+  test('should not throw error if rule params count is enough', () => {
+    expect(() => {
+      requireParamsCount(2, [1, 5], 'between')
+    }).not.toThrowError('Validation rule "between" requires at least 2 parameters')
   })
 
   test('should return parsed multiple rules for single field', () => {
