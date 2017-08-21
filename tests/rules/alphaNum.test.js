@@ -18,7 +18,11 @@ describe('alphaNum rule', () => {
   })
 
   test('should be false when value is a string with a dash', () => {
-    expect(alphaNum('a-')).toBe(false)
+    expect(alphaNum('-')).toBe(false)
+  })
+
+  test('should be false when value is a string with an underscore', () => {
+    expect(alphaNum('_')).toBe(false)
   })
 
   test('should be true when value is a number', () => {
