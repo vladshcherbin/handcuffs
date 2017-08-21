@@ -2,13 +2,15 @@ import accepted from './rules/accepted'
 import array from './rules/array'
 import boolean from './rules/boolean'
 import required from './rules/required'
+import string from './rules/string'
 
 // Predefined rules
 const validationRules = {
   accepted,
   array,
   boolean,
-  required
+  required,
+  string
 }
 
 // Add a new rule
