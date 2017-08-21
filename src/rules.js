@@ -1,5 +1,6 @@
 import accepted from './rules/accepted'
 import alpha from './rules/alpha'
+import alphaDash from './rules/alphaDash'
 import alphaNum from './rules/alphaNum'
 import array from './rules/array'
 import boolean from './rules/boolean'
@@ -11,6 +12,7 @@ import string from './rules/string'
 const validationRules = {
   accepted,
   alpha,
+  alphaDash,
   alphaNum,
   array,
   boolean,
