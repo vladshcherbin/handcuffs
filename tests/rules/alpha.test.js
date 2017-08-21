@@ -5,8 +5,8 @@ describe('alpha rule', () => {
     expect(alpha('Jack')).toBe(true)
   })
 
-  test('should be true when value is an empty string', () => {
-    expect(alpha('')).toBe(true)
+  test('should be false when value is an empty string', () => {
+    expect(alpha('')).toBe(false)
   })
 
   test('should be false when value is a string with white space', () => {
