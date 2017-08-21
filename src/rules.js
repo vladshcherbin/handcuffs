@@ -1,5 +1,6 @@
 import accepted from './rules/accepted'
 import alpha from './rules/alpha'
+import alphaNum from './rules/alphaNum'
 import array from './rules/array'
 import boolean from './rules/boolean'
 import numeric from './rules/numeric'
@@ -10,6 +11,7 @@ import string from './rules/string'
 const validationRules = {
   accepted,
   alpha,
+  alphaNum,
   array,
   boolean,
   numeric,
