@@ -1,4 +1,11 @@
-import { addRule, formatRules, getRule, requireParamsCount } from '../src/rules'
+import {
+  addRule,
+  formatRules,
+  getRule,
+  hasRules,
+  hasNumericRules,
+  requireParamsCount
+} from '../src/rules'
 
 describe('Validation rules', () => {
   test('should add new validation rule', () => {
@@ -17,6 +24,79 @@ describe('Validation rules', () => {
     expect(() => {
       addRule('custom', () => false)
     }).toThrowError('Validation rule "custom" already exists')
+  })
+
+  test('should throw error if rule params count is not enough', () => {
+    expect(() => {
+      requireParamsCount(2, [1], 'between')
+    }).toThrowError('Validation rule "between" requires at least 2 parameters')
+  })
+
+  test('should not throw error if rule params count is enough', () => {
+    expect(() => {
+      requireParamsCount(2, [1, 5], 'between')
+    }).not.toThrowError('Validation rule "between" requires at least 2 parameters')
+  })
+
+  test('should return true when the search rule exists in field rules', () => {
+    const fieldRules = formatRules({ name: 'required|min' }).name
+    const rulesToFind = 'min'
+
+    expect(hasRules(fieldRules, rulesToFind)).toBe(true)
+  })
+
+  test('should return false when the search rule doesn\'t exist in field rules', () => {
+    const fieldRules = formatRules({ name: 'required|min' }).name
+    const rulesToFind = 'max'
+
+    expect(hasRules(fieldRules, rulesToFind)).toBe(false)
+  })
+
+  test('should return false when the search rule is an empty string', () => {
+    const fieldRules = formatRules({ name: 'required|min' }).name
+    const rulesToFind = ''
+
+    expect(hasRules(fieldRules, rulesToFind)).toBe(false)
+  })
+
+  test('should return true when one of the search rules exists in field rules', () => {
+    const fieldRules = formatRules({ name: 'min' }).name
+    const rulesToFind = ['max', 'min']
+
+    expect(hasRules(fieldRules, rulesToFind)).toBe(true)
+  })
+
+  test('should return false when none of the search rules exist in field rules', () => {
+    const fieldRules = formatRules({ name: 'required|min' }).name
+    const rulesToFind = ['boolean', 'max']
+
+    expect(hasRules(fieldRules, rulesToFind)).toBe(false)
+  })
+
+  test('should return false when the search rule is an empty array', () => {
+    const fieldRules = formatRules({ name: 'required|min' }).name
+    const rulesToFind = []
+
+    expect(hasRules(fieldRules, rulesToFind)).toBe(false)
+  })
+
+  test('should return false when field rules is an empty array', () => {
+    const fieldRules = []
+    const rulesToFind = 'min'
+
+    expect(hasRules(fieldRules, rulesToFind)).toBe(false)
+  })
+
+  test('should return true when field rules have any of numeric rules', () => {
+    const fieldRules = formatRules({ age: 'required|numeric' }).age
+
+    expect(hasNumericRules(fieldRules)).toBe(true)
+  })
+
+  test('should return false when field rules don\'t have any of numeric rules', () => {
+    const fieldRules = formatRules({ age: 'required' }).age
+
+    expect(hasNumericRules(fieldRules)).toBe(false)
   })
 
   test('should return parsed single rule for single field', () => {
@@ -38,18 +118,6 @@ describe('Validation rules', () => {
     const parsedRules = { password: [{ title: 'between', params: ['5', '10'] }] }
 
     expect(formatRules(rules)).toMatchObject(parsedRules)
-  })
-
-  test('should throw error if rule params count is not enough', () => {
-    expect(() => {
-      requireParamsCount(2, [1], 'between')
-    }).toThrowError('Validation rule "between" requires at least 2 parameters')
-  })
-
-  test('should not throw error if rule params count is enough', () => {
-    expect(() => {
-      requireParamsCount(2, [1, 5], 'between')
-    }).not.toThrowError('Validation rule "between" requires at least 2 parameters')
   })
 
   test('should return parsed multiple rules for single field', () => {

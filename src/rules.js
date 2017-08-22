@@ -21,6 +21,8 @@ const validationRules = {
   string
 }
 
+const numericRules = ['numeric']
+
 // Add a new rule
 export function addRule(ruleTitle, ruleFunction) {
   if (validationRules[ruleTitle]) {
@@ -37,6 +39,24 @@ export function getRule(ruleTitle) {
   } else {
     return validationRules[ruleTitle]
   }
+}
+
+// Check if rules array has any of provided rules
+export function hasRules(rulesArray, rulesToFind) {
+  const ruleTitlesArray = rulesArray.map(rule => rule.title)
+
+  if (Array.isArray(rulesToFind)) {
+    return rulesToFind.reduce((result, currentRuleToFind) => (
+      result || ruleTitlesArray.includes(currentRuleToFind)
+    ), false)
+  }
+
+  return ruleTitlesArray.includes(rulesToFind)
+}
+
+// Check if rules array has any of numeric rules
+export function hasNumericRules(rulesArray) {
+  return hasRules(rulesArray, numericRules)
 }
 
 // Check required params for a rule
