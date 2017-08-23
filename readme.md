@@ -1,6 +1,6 @@
 # Handcuffs
 
-[![Build Status](https://travis-ci.org/VladShcherbin/handcuffs.svg?branch=master)](https://travis-ci.org/VladShcherbin/handcuffs)
+[![Build Status](https://travis-ci.org/handcuffs/handcuffs.svg?branch=master)](https://travis-ci.org/handcuffs/handcuffs)
 
 Validation library
 
