@@ -4,6 +4,7 @@ import alphaDash from './rules/alphaDash'
 import alphaNum from './rules/alphaNum'
 import array from './rules/array'
 import boolean from './rules/boolean'
+import min from './rules/min'
 import numeric from './rules/numeric'
 import required from './rules/required'
 import string from './rules/string'
@@ -16,6 +17,7 @@ const validationRules = {
   alphaNum,
   array,
   boolean,
+  min,
   numeric,
   required,
   string
