@@ -89,3 +89,18 @@ export function formatRules(rules) {
     [field]: formatFieldRules(rules[field])
   }), {})
 }
+
+// Get the size of the value, depending on the value type and rules
+export function getSize(value, rules) {
+  const hasNumericRule = hasNumericRules(rules)
+
+  if (numeric(value) && hasNumericRule) {
+    return value
+  }
+
+  if (Array.isArray(value)) {
+    return value.length
+  }
+
+  return String(value).length
+}
