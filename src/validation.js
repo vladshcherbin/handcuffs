@@ -4,15 +4,16 @@ import formatErrorMessage from './messages'
 // Validate value against rules, return errors array
 function validateValue(value, rules) {
   return rules.reduce((existingErrors, rule) => {
-    const isValid = getRule(rule.title)(value)
+    const { title, params } = rule
+    const isValid = getRule(title)(value, params, rules)
 
     return !isValid
-      ? [...existingErrors, formatErrorMessage(rule.title, rule.params)]
+      ? [...existingErrors, formatErrorMessage(title, params)]
       : existingErrors
   }, [])
 }
 
-// Validate fields against rules, return field with array of errors if found
+// Validate fields against rules, return fields with an array of errors if found
 function validateFields(fields, rules) {
   return Object.keys(fields).reduce((fieldsWithErrors, currentField) => {
     const fieldValue = fields[currentField]
@@ -24,7 +25,7 @@ function validateFields(fields, rules) {
   }, {})
 }
 
-// Proceed the first part of field rules, return object with fields and their values or errors
+// Proceed the first part of field rules, return an object with fields and their values or errors
 function proceedRuleFirstPart(partTitle, partRules, data, isLastPart) {
   if (partTitle === '*') {
     if (Array.isArray(data) && data.length) {
@@ -46,7 +47,7 @@ function proceedRuleFirstPart(partTitle, partRules, data, isLastPart) {
   return isLastPart ? validateFields(field, partRules) : field
 }
 
-// Proceed the rest part of field rules, return object with fields and their values or errors
+// Proceed the rest part of field rules, return an object with fields and their values or errors
 function proceedRuleRestPart(part, fields, rules, isLastPart) {
   const fieldsArray = Object.keys(fields)
 
@@ -83,7 +84,7 @@ function proceedRuleRestPart(part, fields, rules, isLastPart) {
   return {}
 }
 
-// Split field by '.', return object with fields and array of validation errors
+// Split field by '.', return an object with fields and array of validation errors
 function validateField(field, rules, data) {
   return field.split('.').reduce((fields, currentRulePart, partIndex, partArray) => {
     const isLastPart = partIndex === (partArray.length - 1)
@@ -96,7 +97,7 @@ function validateField(field, rules, data) {
   }, data)
 }
 
-// Validate data with rules, return object with fields and their errors
+// Validate data with rules, return an object with fields and their errors
 export default function validate(data, rules) {
   const parsedRules = formatRules(rules)
 
