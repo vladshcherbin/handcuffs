@@ -25,11 +25,11 @@ describe('Validation', () => {
     const rules = {
       name: 'required',
       'wife.name': 'required',
-      'wife.pets': 'required'
+      'wife.pets.count': 'required'
     }
     const expectedResult = {
       name: ['This field is required'],
-      'wife.pets': ['This field is required']
+      'wife.pets.count': ['This field is required']
     }
 
     expect(validate(data, rules)).toMatchObject(expectedResult)
@@ -96,6 +96,30 @@ describe('Validation', () => {
       '*.name': 'required'
     }
     const expectedResult = {}
+
+    expect(validate(data, rules)).toMatchObject(expectedResult)
+  })
+
+  test('should return no errors when object is mathed with rules for array', () => {
+    const data = {
+      name: 'Jack'
+    }
+    const rules = {
+      '*.pets': 'required'
+    }
+    const expectedResult = {}
+
+    expect(validate(data, rules)).toMatchObject(expectedResult)
+  })
+
+  test('should return errors when data is not defined', () => {
+    const data = undefined
+    const rules = {
+      name: 'required'
+    }
+    const expectedResult = {
+      name: ['This field is required']
+    }
 
     expect(validate(data, rules)).toMatchObject(expectedResult)
   })
