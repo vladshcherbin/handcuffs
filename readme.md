@@ -1,6 +1,7 @@
 # Handcuffs
 
 [![Build Status](https://travis-ci.org/handcuffs/handcuffs.svg?branch=master)](https://travis-ci.org/handcuffs/handcuffs)
+[![Test Coverage](https://codecov.io/gh/handcuffs/handcuffs/branch/master/graph/badge.svg)](https://codecov.io/gh/handcuffs/handcuffs)
 
 Validation library
 

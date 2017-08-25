@@ -4,7 +4,8 @@
   "description": "Validation library",
   "scripts": {
     "example": "nodemon --watch example --watch src --exec babel-node example",
-    "test": "jest"
+    "test": "jest --coverage && codecov",
+    "test:coverage": "jest --coverage"
   },
   "main": "src/index.js",
   "files": [
@@ -16,6 +17,7 @@
     "babel-cli": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.6.0",
+    "codecov": "^2.3.0",
     "eslint": "^4.4.1",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.7.0",
