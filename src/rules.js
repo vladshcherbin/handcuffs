@@ -5,6 +5,7 @@ import alphaNum from './rules/alphaNum'
 import array from './rules/array'
 import between from './rules/between'
 import boolean from './rules/boolean'
+import max from './rules/max'
 import min from './rules/min'
 import numeric from './rules/numeric'
 import required from './rules/required'
@@ -19,6 +20,7 @@ const validationRules = {
   array,
   between,
   boolean,
+  max,
   min,
   numeric,
   required,

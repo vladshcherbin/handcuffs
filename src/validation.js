@@ -8,7 +8,7 @@ function validateValue(value, rules) {
     const isValid = getRule(title)(value, params, rules)
 
     return !isValid
-      ? [...existingErrors, formatErrorMessage(title, params)]
+      ? [...existingErrors, formatErrorMessage(title, params, rules)]
       : existingErrors
   }, [])
 }
