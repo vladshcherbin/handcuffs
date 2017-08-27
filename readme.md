@@ -45,6 +45,14 @@ const validationErrors = validate(data, rules)
 | Rule | Example | Description |
 | --- | --- | --- |
 | accepted | `{ rules: 'accepted' }` | The field under validation must be `'yes'`, `'on'`, `1`, or `true`. |
+| alpha | `{ name: 'alpha' }` | The field under validation must be entirely alphabetic characters. |
+| alphaDash | `{ slug: 'alphaDash' }` | The field under validation may have alpha-numeric characters, as well as dashes and underscores. |
+| alphaNum | `{ password: 'alphaNum' }` | The field under validation must be entirely alpha-numeric characters. |
 | array | `{ permissions: 'array' }` | The field under validation must be an array. |
+| between | `{ guests: 'between:1,3' }` | The field under validation must have a size between the given *min* and *max* values. |
 | boolean | `{ isVisible: 'boolean' }` | The field under validation must be a boolean value `true` or `false`. |
+| max | `{ password: 'max:10' }` | The field under validation must be less than or equal to the given *max* value. |
+| min | `{ password: 'min:6' }` | The field under validation must have the given *min* value. |
+| numeric | `{ age: 'numeric' }` | The field under validation must be numeric. |
 | required | `{ name: 'required' }` | The field under validation must be present and not empty. |
+| string | `{ name: 'string' }` | The field under validation must be a string. |
