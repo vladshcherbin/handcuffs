@@ -3,6 +3,7 @@ import alpha from './rules/alpha'
 import alphaDash from './rules/alphaDash'
 import alphaNum from './rules/alphaNum'
 import array from './rules/array'
+import between from './rules/between'
 import boolean from './rules/boolean'
 import min from './rules/min'
 import numeric from './rules/numeric'
@@ -16,6 +17,7 @@ const validationRules = {
   alphaDash,
   alphaNum,
   array,
+  between,
   boolean,
   min,
   numeric,
