@@ -22,5 +22,5 @@ export default {
   },
   numeric: 'This field must be a number',
   required: 'This field is required',
-  string: 'This filed must be a string'
+  string: 'This field must be a string'
 }
