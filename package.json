@@ -7,8 +7,8 @@
   "main": "dist/node/index.js",
   "module": "dist/node-es/index.js",
   "browser": {
-    "dist/node/index.js": "dist/browser/index.js",
-    "dist/node-es/index.js": "dist/browser-es/index.js"
+    "dist/node/index.js": "./dist/browser/index.js",
+    "dist/node-es/index.js": "./dist/browser-es/index.js"
   },
   "files": [
     "*.md",
