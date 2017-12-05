@@ -98,7 +98,7 @@ function validateField(field, rules, data) {
 }
 
 // Validate data with rules, return an object with fields and their errors
-export default function validate(data, rules) {
+export default function validate(data, rules = {}) {
   const parsedRules = formatRules(rules)
 
   const fieldsWithValues = Object.keys(parsedRules).reduce((fieldsWithErrors, currentField) => ({
