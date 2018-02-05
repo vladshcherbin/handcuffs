@@ -3,7 +3,8 @@
   "description": "Validation library",
   "version": "0.3.2",
   "scripts": {
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "example": "nodemon -x babel-node example -w example -w src"
   },
   "dependencies": {},
   "devDependencies": {
