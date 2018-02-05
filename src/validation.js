@@ -1,110 +1,71 @@
-import { formatRules, getRule } from './rules'
-import formatErrorMessage from './messages'
+import { get, forEach } from 'dot-wild-tiny'
+import { getValidationFunction, parseRules } from './rules'
+import getValidationErrorMessage from './messages'
 
-// Validate value against rules, return errors array
 function validateValue(value, rules) {
-  return rules.reduce((existingErrors, rule) => {
-    const { title, params } = rule
-    const isValid = getRule(title)(value, params, rules)
+  const rulesArray = parseRules(rules)
+  let validationErrors = []
 
-    return !isValid
-      ? [...existingErrors, formatErrorMessage(title, params, rules)]
-      : existingErrors
-  }, [])
-}
+  rulesArray.forEach((rule) => {
+    const validationFunction = getValidationFunction(rule)
+    const valueIsValid = validationFunction(value)
 
-// Validate fields against rules, return fields with an array of errors if found
-function validateFields(fields, rules) {
-  return Object.keys(fields).reduce((fieldsWithErrors, currentField) => {
-    const fieldValue = fields[currentField]
-    const fieldErrors = validateValue(fieldValue, rules)
-
-    return fieldErrors.length
-      ? { ...fieldsWithErrors, [currentField]: fieldErrors }
-      : fieldsWithErrors
-  }, {})
-}
-
-// Proceed the first part of field rules, return an object with fields and their values or errors
-function proceedRuleFirstPart(partTitle, partRules, data, isLastPart) {
-  if (partTitle === '*') {
-    if (Array.isArray(data) && data.length) {
-      return data.reduce((fields, value, valueIndex) => {
-        const field = ({ [valueIndex]: value })
-
-        return isLastPart
-          ? { ...fields, ...validateFields(field, partRules) }
-          : { ...fields, ...field }
-      }, {})
+    if (!valueIsValid) {
+      validationErrors = [
+        ...validationErrors,
+        getValidationErrorMessage(rule)
+      ]
     }
+  })
 
-    return {}
+  return validationErrors
+}
+
+function validateSingleValue(path, rules, data) {
+  const errors = {}
+  const value = get(data, path)
+  const validationErrors = validateValue(value, rules)
+
+  if (validationErrors.length) {
+    errors[path] = validationErrors
   }
 
-  const fieldValue = data ? data[partTitle] : undefined
-  const field = ({ [partTitle]: fieldValue })
-
-  return isLastPart ? validateFields(field, partRules) : field
+  return errors
 }
 
-// Proceed the rest part of field rules, return an object with fields and their values or errors
-function proceedRuleRestPart(part, fields, rules, isLastPart) {
-  const fieldsArray = Object.keys(fields)
+function validateMultipleValues(path, rules, data) {
+  const errors = {}
 
-  if (fieldsArray.length) {
-    return fieldsArray.reduce((parsedFields, currentField) => {
-      const currentFieldValue = fields[currentField]
+  forEach(data, path, (value, _, __, fullPath) => {
+    const validationErrors = validateValue(value, rules)
 
-      if (part === '*') {
-        if (Array.isArray(currentFieldValue) && currentFieldValue.length) {
-          return {
-            ...parsedFields,
-            ...currentFieldValue.reduce((parsedValues, currentValue, currentValueIndex) => {
-              const field = ({ [`${currentField}.${currentValueIndex}`]: currentValue })
+    if (validationErrors.length) {
+      errors[fullPath] = validationErrors
+    }
+  })
 
-              return isLastPart
-                ? { ...parsedValues, ...validateFields(field, rules) }
-                : { ...parsedValues, ...field }
-            }, {})
-          }
-        }
+  return errors
+}
 
-        return parsedFields
-      }
-
-      const fieldValue = currentFieldValue ? currentFieldValue[part] : undefined
-      const field = ({ [`${currentField}.${part}`]: fieldValue })
-
-      return isLastPart
-        ? { ...parsedFields, ...validateFields(field, rules) }
-        : { ...parsedFields, ...field }
-    }, {})
+function validateAttribute(attribute, rules, data) {
+  if (attribute.includes('*')) {
+    return validateMultipleValues(attribute, rules, data)
   }
 
-  return {}
+  return validateSingleValue(attribute, rules, data)
 }
 
-// Split field by '.', return an object with fields and array of validation errors
-function validateField(field, rules, data) {
-  return field.split('.').reduce((fields, currentRulePart, partIndex, partArray) => {
-    const isLastPart = partIndex === (partArray.length - 1)
+export default function validate(data, rules) {
+  let errors = {}
 
-    if (partIndex === 0) {
-      return proceedRuleFirstPart(currentRulePart, rules, data, isLastPart)
+  Object.keys(rules).forEach((attribute) => {
+    const attributeRules = rules[attribute]
+    const attributeErrors = validateAttribute(attribute, attributeRules, data)
+
+    if (Object.keys(attributeErrors).length) {
+      errors = Object.assign({}, errors, attributeErrors)
     }
+  })
 
-    return proceedRuleRestPart(currentRulePart, fields, rules, isLastPart)
-  }, data)
-}
-
-// Validate data with rules, return an object with fields and their errors
-export default function validate(data, rules = {}) {
-  const parsedRules = formatRules(rules)
-
-  const fieldsWithValues = Object.keys(parsedRules).reduce((fieldsWithErrors, currentField) => ({
-    ...fieldsWithErrors,
-    ...validateField(currentField, parsedRules[currentField], data)
-  }), {})
-
-  return fieldsWithValues
+  return errors
 }
