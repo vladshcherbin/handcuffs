@@ -1,18 +1,24 @@
-import { addRule, validate } from '../src'
-
-addRule('email', () => false)
+import { validate } from '../src'
 
 const data = {
   name: 'Jack',
   wife: {
     name: 'Susan'
-  }
+  },
+  kids: [
+    {
+      name: 'Samuel'
+    }
+  ]
 }
 
 const rules = {
   name: 'required',
-  'wife.name': 'required',
-  pets: 'required|array'
+  'wife.surname': 'required|string',
+  kids: 'array',
+  'kids.*.surname': 'required'
 }
 
-validate(data, rules)
+const errors = validate(data, rules)
+
+console.log(errors)
