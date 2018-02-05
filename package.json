@@ -2,7 +2,9 @@
   "name": "handcuffs",
   "description": "Validation library",
   "version": "0.3.2",
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint src"
+  },
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.39",
