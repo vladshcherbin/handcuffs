@@ -6,7 +6,9 @@
     "lint": "eslint src",
     "example": "nodemon -x babel-node example -w example -w src"
   },
-  "dependencies": {},
+  "dependencies": {
+    "dot-wild-tiny": "^1.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.39",
     "@babel/node": "^7.0.0-beta.39",

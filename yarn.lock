@@ -1035,6 +1035,12 @@ dot-prop@^4.1.0:
   dependencies:
     is-obj "^1.0.0"
 
+dot-wild-tiny@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/dot-wild-tiny/-/dot-wild-tiny-1.0.0.tgz#9b5cb92a3c85f882110128eccd95498db6a7c088"
+  dependencies:
+    is-plain-object "^2.0.3"
+
 duplexer3@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
