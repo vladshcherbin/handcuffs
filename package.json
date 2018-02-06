@@ -4,7 +4,8 @@
   "version": "0.3.2",
   "scripts": {
     "lint": "eslint src",
-    "example": "nodemon -x babel-node example -w example -w src"
+    "example": "nodemon -x babel-node example -w example -w src",
+    "test": "jest"
   },
   "dependencies": {
     "dot-wild-tiny": "^1.0.0",
