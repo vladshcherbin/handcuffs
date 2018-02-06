@@ -7,7 +7,8 @@
     "example": "nodemon -x babel-node example -w example -w src"
   },
   "dependencies": {
-    "dot-wild-tiny": "^1.0.0"
+    "dot-wild-tiny": "^1.0.0",
+    "is-number": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.39",
