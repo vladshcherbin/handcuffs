@@ -1,6 +1,6 @@
-import numeric from './numeric'
+import isNumber from 'is-number'
 import string from './string'
 
 export default function alphaNum(value) {
-  return (string(value) || numeric(value)) && (/^[a-zA-Z0-9]+$/).test(value)
+  return (string(value) || isNumber(value)) && (/^$|^[a-z0-9]+$/i).test(value)
 }
