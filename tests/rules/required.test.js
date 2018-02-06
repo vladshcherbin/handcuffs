@@ -9,7 +9,7 @@ describe('required rule', () => {
     expect(required('')).toBe(false)
   })
 
-  test('should be false when value has only white space', () => {
+  test('should be false when value is a string with only white space', () => {
     expect(required(' ')).toBe(false)
   })
 
@@ -35,6 +35,10 @@ describe('required rule', () => {
 
   test('should be true when value is an object', () => {
     expect(required({})).toBe(true)
+  })
+
+  test('should be false when value is undefined', () => {
+    expect(required(undefined)).toBe(false)
   })
 
   test('should be false when value is null', () => {
