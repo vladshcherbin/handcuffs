@@ -1,16 +1,8 @@
 import string from '../../src/rules/string'
 
 describe('string rule', () => {
-  test('should be true when value is a non-empty string', () => {
+  test('should be true when value is a string', () => {
     expect(string('Jack')).toBe(true)
-  })
-
-  test('should be true when value is an empty string', () => {
-    expect(string('')).toBe(true)
-  })
-
-  test('should be true when value has only white space', () => {
-    expect(string(' ')).toBe(true)
   })
 
   test('should be false when value is a number', () => {
@@ -27,6 +19,10 @@ describe('string rule', () => {
 
   test('should be false when value is an object', () => {
     expect(string({})).toBe(false)
+  })
+
+  test('should be false when value is undefined', () => {
+    expect(string(undefined)).toBe(false)
   })
 
   test('should be false when value is null', () => {
