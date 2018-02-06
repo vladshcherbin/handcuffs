@@ -25,6 +25,10 @@ describe('boolean rule', () => {
     expect(boolean({})).toBe(false)
   })
 
+  test('should be false when value is undefined', () => {
+    expect(boolean(undefined)).toBe(false)
+  })
+
   test('should be false when value is null', () => {
     expect(boolean(null)).toBe(false)
   })
