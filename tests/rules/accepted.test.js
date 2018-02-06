@@ -34,11 +34,15 @@ describe('accepted rule', () => {
   })
 
   test('should be false when value is an array', () => {
-    expect(accepted([])).toBe(false)
+    expect(accepted(['Jack'])).toBe(false)
   })
 
   test('should be false when value is an object', () => {
     expect(accepted({})).toBe(false)
+  })
+
+  test('should be false when value is undefined', () => {
+    expect(accepted(undefined)).toBe(false)
   })
 
   test('should be false when value is null', () => {
