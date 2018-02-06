@@ -14,7 +14,7 @@ describe('array rule', () => {
   })
 
   test('should be false when value is a number', () => {
-    expect(array(1)).toBe(false)
+    expect(array(10)).toBe(false)
   })
 
   test('should be false when value is a boolean value', () => {
@@ -23,6 +23,10 @@ describe('array rule', () => {
 
   test('should be false when value is an object', () => {
     expect(array({})).toBe(false)
+  })
+
+  test('should be false when value is undefined', () => {
+    expect(array(undefined)).toBe(false)
   })
 
   test('should be false when value is null', () => {
