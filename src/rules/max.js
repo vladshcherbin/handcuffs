@@ -1,9 +1,9 @@
-import { getSize, requireParamsCount } from '../rules'
+import { checkRuleParams, getValueSize } from '../rules'
 
-export default function max(value, params, rules) {
-  requireParamsCount(1, params, 'max')
+export default function min(value, params, rules) {
+  checkRuleParams(params, 1, 'max')
 
-  const size = getSize(value, rules)
+  const valueSize = getValueSize(value, rules)
 
-  return size <= params[0]
+  return valueSize <= params[0]
 }
