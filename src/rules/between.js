@@ -1,9 +1,9 @@
-import { getSize, requireParamsCount } from '../rules'
+import { checkRuleParams, getValueSize } from '../rules'
 
 export default function between(value, params, rules) {
-  requireParamsCount(2, params, 'between')
+  checkRuleParams(params, 2, 'between')
 
-  const size = getSize(value, rules)
+  const valueSize = getValueSize(value, rules)
 
-  return size >= params[0] && size <= params[1]
+  return valueSize >= params[0] && valueSize <= params[1]
 }
