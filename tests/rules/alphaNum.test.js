@@ -13,7 +13,7 @@ describe('alphaNum rule', () => {
     expect(alphaNum('')).toBe(true)
   })
 
-  test('should be false when value is a string with only white space', () => {
+  test('should be false when value is a string with only whitespaces', () => {
     expect(alphaNum(' ')).toBe(false)
   })
 

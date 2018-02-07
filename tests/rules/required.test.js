@@ -9,7 +9,7 @@ describe('required rule', () => {
     expect(required('')).toBe(false)
   })
 
-  test('should be false when value is a string with only white space', () => {
+  test('should be false when value is a string with only whitespaces', () => {
     expect(required(' ')).toBe(false)
   })
 
