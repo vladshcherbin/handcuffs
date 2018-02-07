@@ -57,11 +57,11 @@ describe('numeric rule', () => {
     expect(numeric('')).toBe(false)
   })
 
-  test.skip('should be false when value is a string with a number and white space', () => {
-    expect(numeric('  3 ')).toBe(false)
+  test('should be true when value is a numeric string with whitespaces', () => {
+    expect(numeric('  3 ')).toBe(true)
   })
 
-  test('should be false when value is a string with only white space', () => {
+  test('should be false when value is a string with only whitespaces', () => {
     expect(numeric(' ')).toBe(false)
   })
 
