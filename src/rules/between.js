@@ -1,7 +1,7 @@
-import { checkRuleParams, getValueSize } from '../rules'
+import { checkRuleParamsCount, getValueSize } from '../rules'
 
 export default function between(value, params, rules) {
-  checkRuleParams(params, 2, 'between')
+  checkRuleParamsCount(params, 2, 'between')
 
   const valueSize = getValueSize(value, rules)
 
