@@ -1,71 +1,79 @@
-import { get, forEach } from 'dot-wild-tiny'
-import { getValidationFunction, parseRules } from './rules'
-import getValidationErrorMessage from './messages'
+import { get, map } from 'dot-wild-tiny'
+import { getRuleValidationFunction, parseRules } from './rules'
+import formatErrorMessage from './messages'
 
-function validateValue(value, rules) {
-  const rulesArray = parseRules(rules)
-  let validationErrors = []
+async function validateValue(value, rules) {
+  const parsedRules = parseRules(rules)
+  let errorMessage
 
-  rulesArray.forEach((rule) => {
-    const validationFunction = getValidationFunction(rule)
-    const valueIsValid = validationFunction(value)
+  for (let i = 0; i < parsedRules.length; i += 1) {
+    const rule = parsedRules[i]
+    const ruleValidationFunction = getRuleValidationFunction(rule.title)
+    // eslint-disable-next-line no-await-in-loop
+    const ruleValid = await ruleValidationFunction(value, rule.params)
 
-    if (!valueIsValid) {
-      validationErrors = [
-        ...validationErrors,
-        getValidationErrorMessage(rule)
-      ]
+    if (!ruleValid) {
+      errorMessage = formatErrorMessage(rule, parsedRules)
+
+      break
     }
-  })
+  }
 
-  return validationErrors
+  return errorMessage
 }
 
-function validateSingleValue(path, rules, data) {
-  const errors = {}
+async function validatePath(path, rules, data) {
   const value = get(data, path)
-  const validationErrors = validateValue(value, rules)
+  const error = await validateValue(value, rules)
 
-  if (validationErrors.length) {
-    errors[path] = validationErrors
+  return error
+    ? { [path]: error }
+    : null
+}
+
+async function validateWildcardPath(path, rules, data) {
+  const values = map(data, path, (value, _, __, fullPath) => ({ fullPath, value }))
+  const errors = await Promise.all(values.map(async ({ fullPath, value }) => {
+    const error = await validateValue(value, rules)
+
+    return error
+      ? { [fullPath]: error }
+      : null
+  }))
+  const filteredErrors = errors.filter(error => error)
+
+  return filteredErrors.length > 0
+    ? Object.assign({}, ...filteredErrors)
+    : null
+}
+
+async function validateData(data, rules) {
+  const errors = await Promise.all(Object.keys(rules).map(async (path) => {
+    const pathRules = rules[path]
+
+    const error = !path.includes('*')
+      ? await validatePath(path, pathRules, data)
+      : await validateWildcardPath(path, pathRules, data)
+
+    return error || null
+  }))
+
+  return errors.filter(error => error)
+}
+
+export default async function validate(data, rules) {
+  if (!data) {
+    throw new Error('No data for validation was provided')
   }
 
-  return errors
-}
-
-function validateMultipleValues(path, rules, data) {
-  const errors = {}
-
-  forEach(data, path, (value, _, __, fullPath) => {
-    const validationErrors = validateValue(value, rules)
-
-    if (validationErrors.length) {
-      errors[fullPath] = validationErrors
-    }
-  })
-
-  return errors
-}
-
-function validateAttribute(attribute, rules, data) {
-  if (attribute.includes('*')) {
-    return validateMultipleValues(attribute, rules, data)
+  if (!rules) {
+    throw new Error('No validation rules were provided')
   }
 
-  return validateSingleValue(attribute, rules, data)
-}
+  const errors = await validateData(data, rules)
 
-export default function validate(data, rules) {
-  let errors = {}
-
-  Object.keys(rules).forEach((attribute) => {
-    const attributeRules = rules[attribute]
-    const attributeErrors = validateAttribute(attribute, attributeRules, data)
-
-    if (Object.keys(attributeErrors).length) {
-      errors = Object.assign({}, errors, attributeErrors)
-    }
-  })
-
-  return errors
+  return {
+    valid: errors.length === 0,
+    errors: Object.assign({}, ...errors)
+  }
 }
