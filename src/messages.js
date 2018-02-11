@@ -1,46 +1,41 @@
 import messages from './messages/en'
-import { hasRules, hasNumericRules } from './rules'
+import { getRuleValueType } from './rules'
 
-// Replacers for message placeholders
 const replacers = {
   between: (message, params) => message.replace(':min', params[0]).replace(':max', params[1]),
   max: (message, params) => message.replace(':max', params[0]),
   min: (message, params) => message.replace(':min', params[0])
 }
 
-// Get field type from field rules
-function getFieldType(rules) {
-  if (hasNumericRules(rules)) {
-    return 'numeric'
-  }
-
-  if (hasRules(rules, ['array'])) {
-    return 'array'
-  }
-
-  return 'string'
+export function addMessage(title, message) {
+  messages[title] = message
 }
 
-// Replace message placeholders
-function replacePlaceholders(message, rule, params) {
-  return replacers[rule]
-    ? replacers[rule](message, params)
+function replacePlaceholders(message, title, params) {
+  const replacerFunction = replacers[title]
+
+  return replacerFunction
+    ? replacerFunction(message, params)
     : message
 }
 
-// Return error message
-export default function formatErrorMessage(ruleTitle, ruleParams, fieldRules) {
-  const definedMessage = messages[ruleTitle]
+export function formatErrorMessage(rule, rules) {
+  const { title, params } = rule
+  const errorMessage = messages[title]
 
-  if (definedMessage) {
-    if (typeof definedMessage === 'object') {
-      const fieldType = getFieldType(fieldRules)
-
-      return replacePlaceholders(definedMessage[fieldType], ruleTitle, ruleParams)
-    }
-
-    return replacePlaceholders(definedMessage, ruleTitle, ruleParams)
+  if (!errorMessage) {
+    throw new Error(`There is no defined error message for '${title}' rule`)
   }
 
-  return ruleTitle
+  if (!rules) {
+    throw new Error('All rules were not passed')
+  }
+
+  if (typeof errorMessage === 'object') {
+    const ruleValueType = getRuleValueType(rules)
+
+    return replacePlaceholders(errorMessage[ruleValueType], title, params)
+  }
+
+  return replacePlaceholders(errorMessage, title, params)
 }

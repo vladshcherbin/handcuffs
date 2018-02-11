@@ -1,8 +1,8 @@
 export default {
   accepted: 'This field must be accepted',
   alpha: 'This field may only contain letters',
-  alphaDash: 'This field may only contain letters, numbers, and dashes',
   alphaNum: 'This field may only contain letters and numbers',
+  alphaNumDash: 'This field may only contain letters, numbers, and dashes',
   array: 'This field must be an array',
   between: {
     array: 'This field must have between :min and :max items',
