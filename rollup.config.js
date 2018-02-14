@@ -6,7 +6,7 @@ import filesize from 'rollup-plugin-filesize'
 const config = (target) => {
   const folder = target
   const babelPresetTarget = (target === 'browser')
-    ? { browser: 'last 2 versions' }
+    ? { browser: ['>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 11'] }
     : { node: 8 }
 
   return {
