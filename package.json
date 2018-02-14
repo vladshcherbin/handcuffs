@@ -1,12 +1,23 @@
 {
   "name": "handcuffs",
-  "description": "Validation library",
+  "description": "Async validation library for node and browser",
   "version": "0.3.2",
+  "author": "Vlad Shcherbin <vlad.shcherbin@gmail.com>",
+  "repository": "VladShcherbin/handcuffs",
+  "main": "dist/node/cjs/index.js",
+  "module": "dist/node/es/index.js",
+  "browser": {
+    "dist/node/cjs/index.js": "./dist/browser/cjs/index.js",
+    "dist/node/es/index.js": "./dist/browser/es/index.js"
+  },
   "scripts": {
     "build": "rollup -c",
-    "lint": "eslint src",
+    "clean": "rimraf dist",
     "example": "nodemon -x babel-node example -w example -w src",
-    "test": "jest"
+    "lint": "eslint src",
+    "test": "jest",
+    "prepublishOnly": "yarn lint && yarn test && yarn clean && yarn build",
+    "postpublish": "yarn clean"
   },
   "dependencies": {
     "dot-prop-wild": "^0.1.1",
@@ -30,5 +41,20 @@
     "rollup-plugin-filesize": "^1.5.0",
     "rollup-plugin-prettier": "^0.4.0"
   },
+  "files": [
+    "dist",
+    "readme.md"
+  ],
+  "keywords": [
+    "handcuffs",
+    "async",
+    "validation",
+    "validator",
+    "validate",
+    "node",
+    "browser",
+    "data",
+    "laravel"
+  ],
   "license": "MIT"
 }
