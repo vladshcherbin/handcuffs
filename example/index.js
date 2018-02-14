@@ -9,6 +9,7 @@ const data = {
 
 const rules = {
   name: 'required|string',
+  surname: 'string',
   'wife.age': 'required|number',
   pets: 'required|array',
   'pets.*.type': 'required|string'
