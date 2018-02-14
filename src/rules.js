@@ -28,6 +28,7 @@ const validationRules = {
 }
 
 const numericRules = ['numeric']
+const mandatoryRules = ['accepted', 'required']
 
 export function addRule(title, ruleFunction, message) {
   if (!title || !ruleFunction || !message) {
@@ -52,6 +53,14 @@ export function parseRules(rules) {
       params: params ? params.split(',') : []
     }
   })
+}
+
+export function mandatoryRule(rule, value) {
+  if (mandatoryRules.includes(rule)) {
+    return true
+  }
+
+  return value !== undefined
 }
 
 export function getRuleValidationFunction(rule) {

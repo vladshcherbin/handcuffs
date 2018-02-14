@@ -1,5 +1,5 @@
 import get from 'dot-prop-wild'
-import { getRuleValidationFunction, parseRules } from './rules'
+import { getRuleValidationFunction, mandatoryRule, parseRules } from './rules'
 import { formatErrorMessage } from './messages'
 
 async function validateValue(value, rules) {
@@ -9,13 +9,16 @@ async function validateValue(value, rules) {
   for (let i = 0; i < parsedRules.length; i += 1) {
     const rule = parsedRules[i]
     const ruleValidationFunction = getRuleValidationFunction(rule.title)
-    // eslint-disable-next-line no-await-in-loop
-    const ruleValid = await ruleValidationFunction(value, rule.params)
 
-    if (!ruleValid) {
-      errorMessage = formatErrorMessage(rule, parsedRules)
+    if (mandatoryRule(rule.title, value)) {
+      // eslint-disable-next-line no-await-in-loop
+      const ruleValid = await ruleValidationFunction(value, rule.params)
 
-      break
+      if (!ruleValid) {
+        errorMessage = formatErrorMessage(rule, parsedRules)
+
+        break
+      }
     }
   }
 
