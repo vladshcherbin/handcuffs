@@ -4,21 +4,23 @@ const data = {
   name: 'Jack',
   wife: {
     name: 'Susan'
-  },
-  kids: [
-    {
-      name: 'Samuel'
-    }
-  ]
+  }
 }
 
 const rules = {
-  name: 'required',
-  'wife.surname': 'required|string',
-  kids: 'array',
-  'kids.*.surname': 'required'
+  name: 'required|string',
+  'wife.age': 'required|number',
+  pets: 'required|array',
+  'pets.*.type': 'required|string'
 }
 
-const errors = validate(data, rules)
 
-console.log(errors)
+async function start() {
+  const validationResult = await validate(data, rules)
+
+  if (!validationResult.valid) {
+    console.log(validationResult.errors)
+  }
+}
+
+start()
