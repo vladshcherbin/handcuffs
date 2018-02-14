@@ -4,15 +4,17 @@ const data = {
   name: 'Jack',
   wife: {
     name: 'Susan'
-  }
+  },
+  age: 18
 }
 
 const rules = {
   name: 'required|string',
   surname: 'string',
-  'wife.age': 'required|number',
+  'wife.age': 'required|numeric',
   pets: 'required|array',
-  'pets.*.type': 'required|string'
+  'pets.*.type': 'required|string',
+  age: 'numeric|min:18'
 }
 
 
