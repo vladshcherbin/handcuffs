@@ -67,7 +67,7 @@ describe('Messages', () => {
     test('should return \'alphaNumDash\' rule message', () => {
       const rules = parseRules('alphaNumDash')
 
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field may only contain letters, numbers, and dashes')
+      expect(formatErrorMessage(rules[0], rules)).toEqual('This field may only contain letters, numbers, dashes and underscores')
     })
 
     test('should return \'array\' rule message', () => {

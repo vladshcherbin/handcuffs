@@ -43,7 +43,17 @@ describe('Validation', () => {
     })
 
     test('should validate multiple properties, rules, correct data', async () => {
-      await expect(validate({ name: 'James', age: 20 }, { name: 'required', age: 'numeric' })).resolves.toEqual({
+      const data = {
+        name: 'James',
+        age: 20
+      }
+      const rules = {
+        name: 'required',
+        surname: 'string',
+        age: 'numeric'
+      }
+
+      await expect(validate(data, rules)).resolves.toEqual({
         valid: true,
         errors: {}
       })

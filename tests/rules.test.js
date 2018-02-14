@@ -4,6 +4,7 @@ import {
   getRuleValidationFunction,
   getRuleValueType,
   getValueSize,
+  mandatoryRule,
   parseRules
 } from '../src/rules'
 
@@ -53,6 +54,22 @@ describe('Rules', () => {
       { title: 'required', params: [] },
       { title: 'between', params: ['2', '7'] }
     ])
+  })
+
+  test('should pass \'required\' mandatory rule with value', () => {
+    expect(mandatoryRule('required', '')).toEqual(true)
+  })
+
+  test('should pass \'required\' mandatory rule without value', () => {
+    expect(mandatoryRule('required')).toEqual(true)
+  })
+
+  test('should pass mandatory rule with value', () => {
+    expect(mandatoryRule('string', '')).toEqual(true)
+  })
+
+  test('should pass mandatory rule without value', () => {
+    expect(mandatoryRule('string')).toEqual(false)
   })
 
   test('should not throw when validation function for rule is defined', () => {
