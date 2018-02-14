@@ -1,183 +1,115 @@
 import {
   addRule,
-  formatRules,
-  getRule,
-  getSize,
-  hasRules,
-  hasNumericRules,
-  requireParamsCount
+  checkRuleParamsCount,
+  getRuleValidationFunction,
+  getRuleValueType,
+  getValueSize,
+  parseRules
 } from '../src/rules'
 
-describe('Validation rules', () => {
-  test('should add new validation rule', () => {
-    addRule('custom', () => false)
-
-    expect(getRule('custom')).toBeInstanceOf(Function)
+describe('Rules', () => {
+  test('should throw when new rule has no title', () => {
+    expect(() => addRule(undefined, () => false, 'Custom rule message'))
+      .toThrow('No title, function or message was provided for custom rule')
   })
 
-  test('should throw error if validation rule doesn\'t exist', () => {
-    expect(() => {
-      getRule('fake-rule')
-    }).toThrowError('Validation rule "fake-rule" doesn\'t exist')
+  test('should throw when new rule has no function', () => {
+    expect(() => addRule('fake', undefined, 'Custom rule message'))
+      .toThrow('No title, function or message was provided for custom rule')
   })
 
-  test('should throw error if validation rule already exists', () => {
-    expect(() => {
-      addRule('custom', () => false)
-    }).toThrowError('Validation rule "custom" already exists')
+  test('should throw when new rule has no message', () => {
+    expect(() => addRule('fake', () => false, undefined))
+      .toThrow('No title, function or message was provided for custom rule')
   })
 
-  test('should throw error if rule params count is not enough', () => {
-    expect(() => {
-      requireParamsCount(2, [1], 'between')
-    }).toThrowError('Validation rule "between" requires at least 2 parameters')
+  test('should throw when rule already exists', () => {
+    expect(() => addRule('required', () => {}, 'Custom rule message'))
+      .toThrow('Validation rule \'required\' already exists')
   })
 
-  test('should not throw error if rule params count is enough', () => {
-    expect(() => {
-      requireParamsCount(2, [1, 5], 'between')
-    }).not.toThrowError('Validation rule "between" requires at least 2 parameters')
+  test('should add new rule', () => {
+    const customRuleFunction = () => false
+
+    addRule('custom', customRuleFunction, 'Custom rule message')
+
+    expect(getRuleValidationFunction('custom')).toEqual(customRuleFunction)
   })
 
-  test('should be true when the search rule exists in field rules', () => {
-    const fieldRules = formatRules({ name: 'required|min' }).name
-    const rulesToFind = 'min'
-
-    expect(hasRules(fieldRules, rulesToFind)).toBe(true)
+  test('should parse single rule', () => {
+    expect(parseRules('required')).toEqual([{ title: 'required', params: [] }])
   })
 
-  test('should be false when the search rule doesn\'t exist in field rules', () => {
-    const fieldRules = formatRules({ name: 'required|min' }).name
-    const rulesToFind = 'max'
-
-    expect(hasRules(fieldRules, rulesToFind)).toBe(false)
+  test('should parse single rule with single param', () => {
+    expect(parseRules('age:18')).toEqual([{ title: 'age', params: ['18'] }])
   })
 
-  test('should be false when the search rule is an empty string', () => {
-    const fieldRules = formatRules({ name: 'required|min' }).name
-    const rulesToFind = ''
-
-    expect(hasRules(fieldRules, rulesToFind)).toBe(false)
+  test('should parse single rule with multiple params', () => {
+    expect(parseRules('between:2,7')).toEqual([{ title: 'between', params: ['2', '7'] }])
   })
 
-  test('should be true when one of the search rules exists in field rules', () => {
-    const fieldRules = formatRules({ name: 'min' }).name
-    const rulesToFind = ['max', 'min']
-
-    expect(hasRules(fieldRules, rulesToFind)).toBe(true)
+  test('should parse multiple rules', () => {
+    expect(parseRules('required|between:2,7')).toEqual([
+      { title: 'required', params: [] },
+      { title: 'between', params: ['2', '7'] }
+    ])
   })
 
-  test('should be false when none of the search rules exist in field rules', () => {
-    const fieldRules = formatRules({ name: 'required|min' }).name
-    const rulesToFind = ['boolean', 'max']
-
-    expect(hasRules(fieldRules, rulesToFind)).toBe(false)
+  test('should not throw when validation function for rule is defined', () => {
+    expect(() => getRuleValidationFunction('required')).not.toThrow()
   })
 
-  test('should be false when the search rule is an empty array', () => {
-    const fieldRules = formatRules({ name: 'required|min' }).name
-    const rulesToFind = []
-
-    expect(hasRules(fieldRules, rulesToFind)).toBe(false)
+  test('should throw when validation function for rule is not defined', () => {
+    expect(() => getRuleValidationFunction('fake'))
+      .toThrow('No validation function was defined for \'fake\' rule')
   })
 
-  test('should be false when field rules is an empty array', () => {
-    const fieldRules = []
-    const rulesToFind = 'min'
-
-    expect(hasRules(fieldRules, rulesToFind)).toBe(false)
+  test('should detect numeric value type', () => {
+    expect(getRuleValueType(parseRules('required|numeric|min:3'))).toEqual('numeric')
   })
 
-  test('should be true when field rules have any of numeric rules', () => {
-    const fieldRules = formatRules({ age: 'required|numeric' }).age
-
-    expect(hasNumericRules(fieldRules)).toBe(true)
+  test('should detect array value type', () => {
+    expect(getRuleValueType(parseRules('required|array|min:3'))).toEqual('array')
   })
 
-  test('should be false when field rules don\'t have any of numeric rules', () => {
-    const fieldRules = formatRules({ age: 'required' }).age
-
-    expect(hasNumericRules(fieldRules)).toBe(false)
+  test('should detect string value type', () => {
+    expect(getRuleValueType(parseRules('required|min:3'))).toEqual('string')
   })
 
-  test('should return parsed single rule for single field', () => {
-    const rules = { name: 'required' }
-    const parsedRules = { name: [{ title: 'required', params: [] }] }
-
-    expect(formatRules(rules)).toMatchObject(parsedRules)
+  test('should not throw when rule params count is enough', () => {
+    expect(() => checkRuleParamsCount([1, 3], 2, 'between')).not.toThrow()
   })
 
-  test('should return parsed single rule with single param for single field', () => {
-    const rules = { age: 'age:18' }
-    const parsedRules = { age: [{ title: 'age', params: ['18'] }] }
-
-    expect(formatRules(rules)).toMatchObject(parsedRules)
+  test('should throw when rule params count is not enough', () => {
+    expect(() => checkRuleParamsCount([1], 2, 'between'))
+      .toThrow('\'between\' rule requires at least 2 parameters')
   })
 
-  test('should return parsed single rule with multiple params for single field', () => {
-    const rules = { password: 'between:5,10' }
-    const parsedRules = { password: [{ title: 'between', params: ['5', '10'] }] }
-
-    expect(formatRules(rules)).toMatchObject(parsedRules)
+  test('should detect string value size', () => {
+    expect(getValueSize('ab3', parseRules('required|min:3'))).toEqual(3)
   })
 
-  test('should return parsed multiple rules for single field', () => {
-    const rules = { password: 'required|between:5,10' }
-    const parsedRules = {
-      password: [
-        { title: 'required', params: [] },
-        { title: 'between', params: ['5', '10'] }
-      ]
-    }
-
-    expect(formatRules(rules)).toMatchObject(parsedRules)
+  test('should detect numeric string value size without numeric rules', () => {
+    expect(getValueSize('12', parseRules('required|min:3'))).toEqual(2)
   })
 
-  test('should return parsed rules for multiple fields', () => {
-    const rules = {
-      age: 'age:18',
-      password: 'required|between:5,10'
-    }
-    const parsedRules = {
-      age: [{ title: 'age', params: ['18'] }],
-      password: [
-        { title: 'required', params: [] },
-        { title: 'between', params: ['5', '10'] }
-      ]
-    }
-
-    expect(formatRules(rules)).toMatchObject(parsedRules)
+  test('should detect numeric string value size with numeric rules', () => {
+    expect(getValueSize('12', parseRules('required|numeric|min:3'))).toEqual(12)
   })
 
-  test('should be size of 1 when value is a string with 1 character', () => {
-    expect(getSize('a', [])).toBe(1)
+  test('should detect number value size without numeric rules', () => {
+    expect(getValueSize(15, parseRules('required|min:3'))).toEqual(2)
   })
 
-  test('should be size of 5 when value is a string with 5 characters', () => {
-    expect(getSize('aBcd3', [])).toBe(5)
+  test('should detect number value size with numeric rules', () => {
+    expect(getValueSize(15, parseRules('required|numeric|min:3'))).toEqual(15)
   })
 
-  test('should be size of 2 when value is a string with number 2 and numeric rules', () => {
-    expect(getSize('2', [{ title: 'numeric', params: [] }])).toBe('2')
+  test('should detect empty array size', () => {
+    expect(getValueSize([], parseRules('required|min:3'))).toEqual(0)
   })
 
-  test('should be size of 1 when value is a string with number 1 and no numeric rules', () => {
-    expect(getSize('2', [])).toBe(1)
-  })
-
-  test('should be size of 3 when value is a number with numeric rules', () => {
-    expect(getSize(3, [{ title: 'numeric', params: [] }])).toBe(3)
-  })
-
-  test('should be size of 1 when value is a number with no numeric rules', () => {
-    expect(getSize(3, [])).toBe(1)
-  })
-
-  test('should be size of 1 when value is an array with length of 1', () => {
-    expect(getSize(['Jack'], [])).toBe(1)
-  })
-
-  test('should be size of 0 when value is an empty array', () => {
-    expect(getSize([], [])).toBe(0)
+  test('should detect non-empty array size', () => {
+    expect(getValueSize(['Jack'], parseRules('required|min:3'))).toEqual(1)
   })
 })
