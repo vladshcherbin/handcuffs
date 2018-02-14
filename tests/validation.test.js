@@ -50,7 +50,7 @@ describe('Validation', () => {
       const rules = {
         name: 'required',
         surname: 'string',
-        age: 'numeric'
+        age: 'numeric|min:20'
       }
 
       await expect(validate(data, rules)).resolves.toEqual({
