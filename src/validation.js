@@ -1,6 +1,6 @@
-import { get, map } from 'dot-wild-tiny'
+import get from 'dot-prop-wild'
 import { getRuleValidationFunction, parseRules } from './rules'
-import formatErrorMessage from './messages'
+import { formatErrorMessage } from './messages'
 
 async function validateValue(value, rules) {
   const parsedRules = parseRules(rules)
@@ -24,20 +24,20 @@ async function validateValue(value, rules) {
 
 async function validatePath(path, rules, data) {
   const value = get(data, path)
-  const error = await validateValue(value, rules)
+  const error = await validateValue(value.value, rules)
 
   return error
-    ? { [path]: error }
+    ? { [value.path]: error }
     : null
 }
 
 async function validateWildcardPath(path, rules, data) {
-  const values = map(data, path, (value, _, __, fullPath) => ({ fullPath, value }))
-  const errors = await Promise.all(values.map(async ({ fullPath, value }) => {
-    const error = await validateValue(value, rules)
+  const values = get(data, path)
+  const errors = await Promise.all(values.map(async (value) => {
+    const error = await validateValue(value.value, rules)
 
     return error
-      ? { [fullPath]: error }
+      ? { [value.path]: error }
       : null
   }))
   const filteredErrors = errors.filter(error => error)
