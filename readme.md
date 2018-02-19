@@ -1,7 +1,7 @@
 # Handcuffs
 
-[![Build Status](https://travis-ci.org/VladShcherbin/handcuffs.svg?branch=master)](https://travis-ci.org/VladShcherbin/handcuffs)
-[![Coverage](https://codecov.io/gh/VladShcherbin/handcuffs/branch/master/graph/badge.svg)](https://codecov.io/gh/VladShcherbin/handcuffs)
+[![Build Status](https://travis-ci.org/vladshcherbin/handcuffs.svg?branch=master)](https://travis-ci.org/vladshcherbin/handcuffs)
+[![Coverage](https://codecov.io/gh/vladshcherbin/handcuffs/branch/master/graph/badge.svg)](https://codecov.io/gh/vladshcherbin/handcuffs)
 
 Async validation library for node and browser.
 
