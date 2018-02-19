@@ -10,6 +10,7 @@ import max from './rules/max'
 import min from './rules/min'
 import numeric from './rules/numeric'
 import required from './rules/required'
+import slug from './rules/slug'
 import string from './rules/string'
 
 const validationRules = {
@@ -24,6 +25,7 @@ const validationRules = {
   min,
   numeric,
   required,
+  slug,
   string
 }
 

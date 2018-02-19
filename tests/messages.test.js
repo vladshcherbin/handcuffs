@@ -148,6 +148,12 @@ describe('Messages', () => {
       expect(formatErrorMessage(rules[0], rules)).toEqual('This field is required')
     })
 
+    test('should return \'slug\' rule message', () => {
+      const rules = parseRules('slug')
+
+      expect(formatErrorMessage(rules[0], rules)).toEqual('This field may only contain lowercase letters, numbers and dashes')
+    })
+
     test('should return \'string\' rule message', () => {
       const rules = parseRules('string')
 

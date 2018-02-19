@@ -22,5 +22,6 @@ export default {
   },
   numeric: 'This field must be a number',
   required: 'This field is required',
+  slug: 'This field may only contain lowercase letters, numbers and dashes',
   string: 'This field must be a string'
 }
