@@ -48,6 +48,8 @@ async function start() {
 start()
 ```
 
+> **Note**: This library is written using ES6, in order to use it in your project it is advised to transpile it to your environment. The easiest way to do this is by using [Babel](https://babeljs.io) with [@babel/preset-env](https://github.com/babel/babel/tree/master/packages/babel-preset-env).
+
 ### Rules
 
 **accepted**
