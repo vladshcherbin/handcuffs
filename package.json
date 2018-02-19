@@ -4,12 +4,8 @@
   "version": "0.4.3",
   "author": "Vlad Shcherbin <vlad.shcherbin@gmail.com>",
   "repository": "VladShcherbin/handcuffs",
-  "main": "dist/node/cjs/index.js",
-  "module": "dist/node/es/index.js",
-  "browser": {
-    "dist/node/cjs/index.js": "./dist/browser/cjs/index.js",
-    "dist/node/es/index.js": "./dist/browser/es/index.js"
-  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
   "scripts": {
     "build": "rollup -c",
     "clean": "rimraf dist",
