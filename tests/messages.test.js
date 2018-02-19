@@ -100,6 +100,12 @@ describe('Messages', () => {
       expect(formatErrorMessage(rules[0], rules)).toEqual('This field must be true or false')
     })
 
+    test('should return \'email\' rule message', () => {
+      const rules = parseRules('email')
+
+      expect(formatErrorMessage(rules[0], rules)).toEqual('This field must be a valid email address')
+    })
+
     test('should return \'max\' rule message, array value', () => {
       const rules = parseRules('array|max:2')
 

@@ -10,6 +10,7 @@ export default {
     string: 'This field must be between :min and :max characters'
   },
   boolean: 'This field must be true or false',
+  email: 'This field must be a valid email address',
   max: {
     array: 'This field may not have more than :max items',
     numeric: 'This field may not be greater than :max',

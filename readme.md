@@ -108,6 +108,14 @@ The field under validation must have a size between the given *min* and *max* va
 
 The field under validation must be a boolean. Accepted input values are `true` and `false`.
 
+**email**
+
+```js
+{ email: 'email' }
+```
+
+The field under validation must be formatted as an e-mail address.
+
 **max**
 
 ```js
