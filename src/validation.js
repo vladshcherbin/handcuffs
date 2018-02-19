@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import get from 'dot-prop-wild'
 import { getRuleValidationFunction, mandatoryRule, parseRules } from './rules'
 import { formatErrorMessage } from './messages'
@@ -11,7 +12,6 @@ async function validateValue({ path, value }, rules) {
     const ruleValidationFunction = getRuleValidationFunction(rule.title)
 
     if (mandatoryRule(rule.title, value)) {
-      // eslint-disable-next-line no-await-in-loop
       const ruleValid = await ruleValidationFunction(value, rule.params, parsedRules, path)
 
       if (!ruleValid) {
