@@ -55,7 +55,7 @@ start()
 **accepted**
 
 ```js
-{ rules: 'accepted' }
+{ rules: [rules.accepted()] }
 ```
 
 The field under validation must be `'yes'`, `'on'`, `1`, or `true`.
