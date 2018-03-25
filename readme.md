@@ -20,7 +20,7 @@ yarn add handcuffs
 Basic usage example:
 
 ```js
-import { validate } from 'handcuffs'
+import { rules, validate } from 'handcuffs'
 
 const data = {
   name: 'Jack',
@@ -29,19 +29,23 @@ const data = {
   }
 }
 
-const rules = {
-  name: 'required|string',
-  'wife.age': 'required|number',
-  pets: 'required|array',
-  'pets.*.type': 'required|string'
+const dataRules = {
+  name: [rules.required(), rules.string()],
+  'wife.age': [rules.required(), rules.numeric()],
+  pets: [rules.required(), rules.array()],
+  'pets.*.type': [rules.required(), rules.string()]
 }
 
 
 async function start() {
-  const validationResult = await validate(data, rules)
+  try {
+    const validationResult = await validate(data, dataRules)
 
-  if (!validationResult.valid) {
-    console.log(validationResult.errors)
+    if (!validationResult.valid) {
+      console.log(validationResult.errors)
+    }
+  } catch (e) {
+    console.log('Unable to validate', e)
   }
 }
 
