@@ -1,5 +1,9 @@
-import string from './string'
+import isString from '../utilities'
 
-export default function email(value) {
-  return string(value) && (/^$|^.+@.+$/).test(value)
-}
+export default () => (
+  function email(value) {
+    return {
+      valid: isString(value) && (/^$|^.+@.+$/).test(value)
+    }
+  }
+)

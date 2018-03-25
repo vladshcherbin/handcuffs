@@ -111,7 +111,7 @@ The field under validation must be a boolean. Accepted input values are `true` a
 **email**
 
 ```js
-{ email: 'email' }
+{ email: [rules.email()] }
 ```
 
 The field under validation must be formatted as an e-mail address.
