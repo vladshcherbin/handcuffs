@@ -1,9 +1,20 @@
-import { checkRuleParamsCount, getValueSize } from '../rules'
+import { getValueSize } from '../rules'
 
-export default function between(value, params, rules) {
-  checkRuleParamsCount(params, 2, 'between')
+export default (min, max) => {
+  if (!min) {
+    throw new Error('between rule "min" param was not set')
+  }
 
-  const valueSize = getValueSize(value, rules)
+  if (!max) {
+    throw new Error('between rule "max" param was not set')
+  }
 
-  return valueSize >= params[0] && valueSize <= params[1]
+  return function between(value, rules) {
+    const valueSize = getValueSize(value, rules)
+
+    return {
+      valid: valueSize >= min && valueSize <= max,
+      params: { min, max }
+    }
+  }
 }

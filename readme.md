@@ -95,7 +95,7 @@ The field under validation must be an array.
 **between**
 
 ```js
-{ guests: 'between:1,3' }
+{ guests: [rules.between(1, 3)] }
 ```
 
 The field under validation must have a size between the given *min* and *max* values.
