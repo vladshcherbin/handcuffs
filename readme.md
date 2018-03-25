@@ -127,7 +127,7 @@ The field under validation must be less than or equal to the given *max* value.
 **min**
 
 ```js
-{ password: 'min:6' }
+{ password: [rules.min(6)] }
 ```
 
 The field under validation must be greater than or equal to the given *min* value.

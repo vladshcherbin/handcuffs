@@ -1,9 +1,16 @@
-import { checkRuleParamsCount, getValueSize } from '../rules'
+import { getValueSize } from '../rules'
 
-export default function min(value, params, rules) {
-  checkRuleParamsCount(params, 1, 'min')
+export default (param) => {
+  if (!param) {
+    throw new Error('min rule param was not set')
+  }
 
-  const valueSize = getValueSize(value, rules)
+  return function min(value, rules) {
+    const valueSize = getValueSize(value, rules)
 
-  return valueSize >= params[0]
+    return {
+      valid: valueSize >= param,
+      params: { min: param }
+    }
+  }
 }
