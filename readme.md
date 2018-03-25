@@ -159,7 +159,7 @@ The field under validation may have lowercase alpha-numeric characters and dashe
 **string**
 
 ```js
-{ name: 'string' }
+{ name: [rules.string()] }
 ```
 
 The field under validation must be a string.

@@ -1,3 +1,9 @@
-export default function string(value) {
-  return typeof value === 'string'
-}
+import isString from '../utilities'
+
+export default () => (
+  function string(value) {
+    return {
+      valid: isString(value)
+    }
+  }
+)
