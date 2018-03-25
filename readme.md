@@ -79,7 +79,7 @@ The field under validation must be entirely alpha-numeric characters.
 **alphaNumDash**
 
 ```js
-{ url: 'alphaNumDash' }
+{ url: [rules.alphaNumDash()] }
 ```
 
 The field under validation may have alpha-numeric characters, as well as dashes and underscores.
