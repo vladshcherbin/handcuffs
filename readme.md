@@ -87,7 +87,7 @@ The field under validation may have alpha-numeric characters, as well as dashes 
 **array**
 
 ```js
-{ permissions: 'array' }
+{ permissions: [rules.array()] }
 ```
 
 The field under validation must be an array.

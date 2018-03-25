@@ -1,3 +1,7 @@
-export default function array(value) {
-  return Array.isArray(value)
-}
+export default () => (
+  function array(value) {
+    return {
+      valid: Array.isArray(value)
+    }
+  }
+)
