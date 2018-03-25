@@ -1,6 +1,6 @@
-import babel from 'rollup-plugin-babel'
 import cleanup from 'rollup-plugin-cleanup'
 import prettier from 'rollup-plugin-prettier'
+import autoExternal from 'rollup-plugin-auto-external'
 import filesize from 'rollup-plugin-filesize'
 
 export default {
@@ -16,10 +16,6 @@ export default {
     }
   ],
   plugins: [
-    babel({
-      exclude: 'node_modules/**',
-      babelrc: false
-    }),
     cleanup({
       comments: 'none',
       maxEmptyLines: 1
@@ -28,10 +24,7 @@ export default {
       printWidth: 100,
       singleQuote: true
     }),
+    autoExternal(),
     filesize()
-  ],
-  external: [
-    'dot-prop-wild',
-    'is-number'
   ]
 }
