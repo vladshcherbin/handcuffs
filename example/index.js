@@ -1,4 +1,4 @@
-import { validate } from '../src'
+import { rules, validate } from '../src'
 
 const data = {
   name: 'Jack',
@@ -8,21 +8,25 @@ const data = {
   age: 18
 }
 
-const rules = {
-  name: 'required|string',
-  surname: 'string',
-  'wife.age': 'required|numeric',
-  pets: 'required|array',
-  'pets.*.type': 'required|string',
-  age: 'numeric|min:18'
+const dataRules = {
+  name: [rules.required(), rules.string()],
+  surname: [rules.string()],
+  'wife.age': [rules.required(), rules.numeric()],
+  pets: [rules.required(), rules.array()],
+  'pets.*.type': [rules.required(), rules.string()],
+  age: [rules.numeric(), rules.min(18)]
 }
 
 
 async function start() {
-  const validationResult = await validate(data, rules)
+  try {
+    const validationResult = await validate(data, dataRules)
 
-  if (!validationResult.valid) {
-    console.log(validationResult.errors)
+    if (!validationResult.valid) {
+      console.log(validationResult.errors)
+    }
+  } catch (e) {
+    console.log('Unable to validate', e)
   }
 }
 
