@@ -135,7 +135,7 @@ The field under validation must be greater than or equal to the given *min* valu
 **numeric**
 
 ```js
-{ age: 'numeric' }
+{ age: [rules.numeric()] }
 ```
 
 The field under validation must be numeric.
