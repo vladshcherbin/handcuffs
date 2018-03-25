@@ -1,21 +1,20 @@
 /* eslint-disable no-await-in-loop */
 import get from 'dot-prop-wild'
-import { getRuleValidationFunction, mandatoryRule, parseRules } from './rules'
+import { mandatoryRule } from './rules'
 import { formatErrorMessage } from './messages'
 
-async function validateValue({ path, value }, rules) {
-  const parsedRules = parseRules(rules)
+async function validateValue({ value }, rules) {
+  const ruleNames = rules.map(rule => rule.name)
   let errorMessage
 
-  for (let i = 0; i < parsedRules.length; i += 1) {
-    const rule = parsedRules[i]
-    const ruleValidationFunction = getRuleValidationFunction(rule.title)
+  for (let i = 0; i < rules.length; i += 1) {
+    const rule = rules[i]
 
-    if (mandatoryRule(rule.title, value)) {
-      const ruleValid = await ruleValidationFunction(value, rule.params, parsedRules, path)
+    if (mandatoryRule(rule, value)) {
+      const { valid, params } = await rule(value, ruleNames)
 
-      if (!ruleValid) {
-        errorMessage = formatErrorMessage(rule, parsedRules)
+      if (!valid) {
+        errorMessage = formatErrorMessage(rule.name, params, ruleNames)
 
         break
       }
@@ -51,14 +50,18 @@ async function validateWildcardPath(path, rules, data) {
 }
 
 async function validateData(data, rules) {
-  const errors = await Promise.all(Object.keys(rules).map(async (path) => {
+  const rulesArray = Object.keys(rules)
+
+  if (!rulesArray.length) {
+    return []
+  }
+
+  const errors = await Promise.all(rulesArray.map(async (path) => {
     const pathRules = rules[path]
 
-    const error = !path.includes('*')
-      ? await validatePath(path, pathRules, data)
-      : await validateWildcardPath(path, pathRules, data)
-
-    return error || null
+    return !path.includes('*')
+      ? validatePath(path, pathRules, data)
+      : validateWildcardPath(path, pathRules, data)
   }))
 
   return errors.filter(error => error)

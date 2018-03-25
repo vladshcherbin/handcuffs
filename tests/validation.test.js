@@ -1,3 +1,4 @@
+import { rules } from '../src/rules'
 import validate from '../src/validation'
 
 describe('Validation', () => {
@@ -7,10 +8,6 @@ describe('Validation', () => {
 
   test('should throw when no rules provided', async () => {
     await expect(validate({})).rejects.toThrow('No validation rules were provided')
-  })
-
-  test('should throw when validation rule does not exist', async () => {
-    await expect(validate({}, { name: 'fake' })).rejects.toThrow('No validation function was defined for \'fake\' rule')
   })
 
   describe('Objects', () => {
@@ -36,7 +33,7 @@ describe('Validation', () => {
     })
 
     test('should validate single property, rules, correct data', async () => {
-      await expect(validate({ name: 'James' }, { name: 'required' })).resolves.toEqual({
+      await expect(validate({ name: 'James' }, { name: [rules.required()] })).resolves.toEqual({
         valid: true,
         errors: {}
       })
@@ -47,13 +44,13 @@ describe('Validation', () => {
         name: 'James',
         age: 20
       }
-      const rules = {
-        name: 'required',
-        surname: 'string',
-        age: 'numeric|min:20'
+      const dataRules = {
+        name: [rules.required()],
+        surname: [rules.string()],
+        age: [rules.numeric(), rules.min(20)]
       }
 
-      await expect(validate(data, rules)).resolves.toEqual({
+      await expect(validate(data, dataRules)).resolves.toEqual({
         valid: true,
         errors: {}
       })
@@ -64,19 +61,19 @@ describe('Validation', () => {
         name: 'James',
         pets: ['Rex']
       }
-      const rules = {
-        '*.kids': 'required',
-        'pets.*': 'string|min:2'
+      const dataRules = {
+        '*.kids': [rules.required()],
+        'pets.*': [rules.string(), rules.min(2)]
       }
 
-      await expect(validate(data, rules)).resolves.toEqual({
+      await expect(validate(data, dataRules)).resolves.toEqual({
         valid: true,
         errors: {}
       })
     })
 
     test('should validate single property, rules, incorrect data', async () => {
-      await expect(validate({ name: '' }, { name: 'required' })).resolves.toEqual({
+      await expect(validate({ name: '' }, { name: [rules.required()] })).resolves.toEqual({
         valid: false,
         errors: { name: 'This field is required' }
       })
@@ -87,13 +84,13 @@ describe('Validation', () => {
         name: '',
         wife: { name: 'Susan' }
       }
-      const rules = {
-        name: 'required',
-        'wife.name': 'required',
-        'wife.pets.count': 'required'
+      const dataRules = {
+        name: [rules.required()],
+        'wife.name': [rules.required()],
+        'wife.pets.count': [rules.required()]
       }
 
-      await expect(validate(data, rules)).resolves.toEqual({
+      await expect(validate(data, dataRules)).resolves.toEqual({
         valid: false,
         errors: {
           name: 'This field is required',
@@ -107,15 +104,15 @@ describe('Validation', () => {
         name: 'Jack',
         pets: ['Rex', null, [[[], {}, { name: 'Tiger' }]]]
       }
-      const rules = {
-        name: 'required',
-        pets: 'array',
-        'pets.*': 'array',
-        'pets.*.*.*.name': 'required',
-        'cats.*': 'string'
+      const dataRules = {
+        name: [rules.required()],
+        pets: [rules.array()],
+        'pets.*': [rules.array()],
+        'pets.*.*.*.name': [rules.required()],
+        'cats.*': [rules.string()]
       }
 
-      await expect(validate(data, rules)).resolves.toEqual({
+      await expect(validate(data, dataRules)).resolves.toEqual({
         valid: false,
         errors: {
           'pets.0': 'This field must be an array',
@@ -151,14 +148,14 @@ describe('Validation', () => {
     })
 
     test('should validate single item, rules, correct data', async () => {
-      await expect(validate(['James'], { '*': 'string' })).resolves.toEqual({
+      await expect(validate(['James'], { '*': [rules.string()] })).resolves.toEqual({
         valid: true,
         errors: {}
       })
     })
 
     test('should validate multiple items, rules, correct data', async () => {
-      await expect(validate(['James', 'Sam'], { '*': 'string|min:3' })).resolves.toEqual({
+      await expect(validate(['James', 'Sam'], { '*': [rules.string(), rules.min(3)] })).resolves.toEqual({
         valid: true,
         errors: {}
       })
@@ -169,26 +166,26 @@ describe('Validation', () => {
         { name: 'James', wife: { name: 'Susan' } },
         { name: 'Sam', wife: { name: 'Alexa' } }
       ]
-      const rules = {
-        '*.name': 'required|min:3',
-        '*.wife.name': 'required'
+      const dataRules = {
+        '*.name': [rules.string(), rules.min(3)],
+        '*.wife.name': [rules.string()]
       }
 
-      await expect(validate(data, rules)).resolves.toEqual({
+      await expect(validate(data, dataRules)).resolves.toEqual({
         valid: true,
         errors: {}
       })
     })
 
     test('should validate single item, rules, incorrect data', async () => {
-      await expect(validate(['James'], { '*': 'string|min:6' })).resolves.toEqual({
+      await expect(validate(['James'], { '*': [rules.string(), rules.min(6)] })).resolves.toEqual({
         valid: false,
         errors: { 0: 'This field must be at least 6 characters' }
       })
     })
 
     test('should validate multiple items, rules, incorrect data', async () => {
-      await expect(validate(['James', 'Sam'], { '*': 'string|min:5' })).resolves.toEqual({
+      await expect(validate(['James', 'Sam'], { '*': [rules.string(), rules.min(5)] })).resolves.toEqual({
         valid: false,
         errors: { 1: 'This field must be at least 5 characters' }
       })
@@ -199,13 +196,13 @@ describe('Validation', () => {
         { name: 'James', wife: {} },
         { name: 'Sam', wife: { name: 'Alexa' } }
       ]
-      const rules = {
-        '*.name': 'required|min:5',
-        '*.wife.name': 'required',
-        '*.wife.age': 'required'
+      const dataRules = {
+        '*.name': [rules.required(), rules.min(5)],
+        '*.wife.name': [rules.required()],
+        '*.wife.age': [rules.required()]
       }
 
-      await expect(validate(data, rules)).resolves.toEqual({
+      await expect(validate(data, dataRules)).resolves.toEqual({
         valid: false,
         errors: {
           '1.name': 'This field must be at least 5 characters',
@@ -218,15 +215,15 @@ describe('Validation', () => {
 
     test('should validate complex nested items, rules, incorrect data', async () => {
       const data = ['', [1], { name: 'Rex' }]
-      const rules = {
-        '*': 'array',
-        '*.*': 'string',
-        '*.name': 'required',
-        '*.*.name': 'required',
-        '*.wife.name': 'required'
+      const dataRules = {
+        '*': [rules.array()],
+        '*.*': [rules.string()],
+        '*.name': [rules.required()],
+        '*.*.name': [rules.required()],
+        '*.wife.name': [rules.required()]
       }
 
-      await expect(validate(data, rules)).resolves.toEqual({
+      await expect(validate(data, dataRules)).resolves.toEqual({
         valid: false,
         errors: {
           0: 'This field must be an array',
