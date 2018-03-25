@@ -1,7 +1,7 @@
 {
   "name": "handcuffs",
   "description": "Async validation library for node and browser",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "author": "Vlad Shcherbin <vlad.shcherbin@gmail.com>",
   "repository": "vladshcherbin/handcuffs",
   "main": "dist/cjs/index.js",
