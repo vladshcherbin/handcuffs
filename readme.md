@@ -151,7 +151,7 @@ The field under validation must be present in the input data and not empty.
 **slug**
 
 ```js
-{ slug: 'slug' }
+{ slug: [rules.slug()] }
 ```
 
 The field under validation may have lowercase alpha-numeric characters and dashes.
