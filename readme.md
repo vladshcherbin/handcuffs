@@ -143,7 +143,7 @@ The field under validation must be numeric.
 **required**
 
 ```js
-{ name: 'required' }
+{ name: [rules.required()] }
 ```
 
 The field under validation must be present in the input data and not empty.
