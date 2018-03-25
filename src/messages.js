@@ -6,7 +6,7 @@ export function addMessage(title, message) {
   messages[title] = message
 }
 
-export function formatErrorMessage(rule, params, rules) {
+export function formatErrorMessage(rule, params = {}, rules) {
   const errorMessage = messages[rule]
 
   if (!errorMessage) {
