@@ -1,169 +1,116 @@
-import { parseRules } from '../src/rules'
 import { addMessage, formatErrorMessage } from '../src/messages'
 
 describe('Messages', () => {
   test('should not throw when message for rule is defined', () => {
-    const rules = parseRules('required')
-
-    expect(() => formatErrorMessage(rules[0], rules)).not.toThrow()
+    expect(() => formatErrorMessage('required', {}, ['required'])).not.toThrow()
   })
 
   test('should throw when message for rule is not defined', () => {
-    const rules = parseRules('fake')
-
-    expect(() => formatErrorMessage(rules[0], rules))
+    expect(() => formatErrorMessage('fake', {}, ['fake']))
       .toThrow('There is no defined error message for \'fake\' rule')
   })
 
   test('should not throw when all rules were passed', () => {
-    const rules = parseRules('required')
-
-    expect(() => formatErrorMessage(rules[0], rules)).not.toThrow()
+    expect(() => formatErrorMessage('required', {}, ['required'])).not.toThrow()
   })
 
   test('should throw when all rules were not passed', () => {
-    const rules = parseRules('required')
-
-    expect(() => formatErrorMessage(rules[0])).toThrow('All rules were not passed')
+    expect(() => formatErrorMessage('required')).toThrow('All rules were not passed')
   })
 
   test('should return message', () => {
-    const rules = parseRules('required')
-
-    expect(formatErrorMessage(rules[0], rules)).toEqual('This field is required')
+    expect(formatErrorMessage('required', {}, ['required'])).toEqual('This field is required')
   })
 
   test('should return message with params', () => {
-    const rules = parseRules('min:3')
-
-    expect(formatErrorMessage(rules[0], rules)).toEqual('This field must be at least 3 characters')
+    expect(formatErrorMessage('min', { min: 3 }, ['min'])).toEqual('This field must be at least 3 characters')
   })
 
   test('should return added message', () => {
     addMessage('fake', 'Fake message')
 
-    expect(formatErrorMessage({ title: 'fake', params: [] }, [])).toEqual('Fake message')
+    expect(formatErrorMessage('fake', {}, [])).toEqual('Fake message')
   })
 
   describe('Rules', () => {
     test('should return \'accepted\' rule message', () => {
-      const rules = parseRules('accepted')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field must be accepted')
+      expect(formatErrorMessage('accepted', {}, ['accepted'])).toEqual('This field must be accepted')
     })
 
     test('should return \'alpha\' rule message', () => {
-      const rules = parseRules('alpha')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field may only contain letters')
+      expect(formatErrorMessage('alpha', {}, ['alpha'])).toEqual('This field may only contain letters')
     })
 
     test('should return \'alphaNum\' rule message', () => {
-      const rules = parseRules('alphaNum')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field may only contain letters and numbers')
+      expect(formatErrorMessage('alphaNum', {}, ['alphaNum'])).toEqual('This field may only contain letters and numbers')
     })
 
     test('should return \'alphaNumDash\' rule message', () => {
-      const rules = parseRules('alphaNumDash')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field may only contain letters, numbers, dashes and underscores')
+      expect(formatErrorMessage('alphaNumDash', {}, ['alphaNumDash'])).toEqual('This field may only contain letters, numbers, dashes and underscores')
     })
 
     test('should return \'array\' rule message', () => {
-      const rules = parseRules('array')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field must be an array')
+      expect(formatErrorMessage('array', {}, ['array'])).toEqual('This field must be an array')
     })
 
     test('should return \'between\' rule message, array value', () => {
-      const rules = parseRules('array|between:2,5')
-
-      expect(formatErrorMessage(rules[1], rules)).toEqual('This field must have between 2 and 5 items')
+      expect(formatErrorMessage('between', { min: 2, max: 5 }, ['array', 'between'])).toEqual('This field must have between 2 and 5 items')
     })
 
     test('should return \'between\' rule message, numeric value', () => {
-      const rules = parseRules('numeric|between:2,5')
-
-      expect(formatErrorMessage(rules[1], rules)).toEqual('This field must be between 2 and 5')
+      expect(formatErrorMessage('between', { min: 2, max: 5 }, ['numeric', 'between'])).toEqual('This field must be between 2 and 5')
     })
 
     test('should return \'between\' rule message, string value', () => {
-      const rules = parseRules('between:2,5')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field must be between 2 and 5 characters')
+      expect(formatErrorMessage('between', { min: 2, max: 5 }, ['between'])).toEqual('This field must be between 2 and 5 characters')
     })
 
     test('should return \'boolean\' rule message', () => {
-      const rules = parseRules('boolean')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field must be true or false')
+      expect(formatErrorMessage('boolean', {}, ['boolean'])).toEqual('This field must be true or false')
     })
 
     test('should return \'email\' rule message', () => {
-      const rules = parseRules('email')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field must be a valid email address')
+      expect(formatErrorMessage('email', {}, ['email'])).toEqual('This field must be a valid email address')
     })
 
     test('should return \'max\' rule message, array value', () => {
-      const rules = parseRules('array|max:2')
-
-      expect(formatErrorMessage(rules[1], rules)).toEqual('This field may not have more than 2 items')
+      expect(formatErrorMessage('max', { max: 2 }, ['array', 'max'])).toEqual('This field may not have more than 2 items')
     })
 
     test('should return \'max\' rule message, numeric value', () => {
-      const rules = parseRules('numeric|max:2')
-
-      expect(formatErrorMessage(rules[1], rules)).toEqual('This field may not be greater than 2')
+      expect(formatErrorMessage('max', { max: 2 }, ['numeric', 'max'])).toEqual('This field may not be greater than 2')
     })
 
     test('should return \'max\' rule message, string value', () => {
-      const rules = parseRules('max:2')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field may not be greater than 2 characters')
+      expect(formatErrorMessage('max', { max: 2 }, ['max'])).toEqual('This field may not be greater than 2 characters')
     })
 
     test('should return \'min\' rule message, array value', () => {
-      const rules = parseRules('array|min:2')
-
-      expect(formatErrorMessage(rules[1], rules)).toEqual('This field must have at least 2 items')
+      expect(formatErrorMessage('min', { min: 2 }, ['array', 'min'])).toEqual('This field must have at least 2 items')
     })
 
     test('should return \'min\' rule message, numeric value', () => {
-      const rules = parseRules('numeric|min:2')
-
-      expect(formatErrorMessage(rules[1], rules)).toEqual('This field must be at least 2')
+      expect(formatErrorMessage('min', { min: 2 }, ['numeric', 'min'])).toEqual('This field must be at least 2')
     })
 
     test('should return \'min\' rule message, string value', () => {
-      const rules = parseRules('min:2')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field must be at least 2 characters')
+      expect(formatErrorMessage('min', { min: 2 }, ['min'])).toEqual('This field must be at least 2 characters')
     })
 
     test('should return \'numeric\' rule message', () => {
-      const rules = parseRules('numeric')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field must be a number')
+      expect(formatErrorMessage('numeric', {}, ['numeric'])).toEqual('This field must be a number')
     })
 
     test('should return \'required\' rule message', () => {
-      const rules = parseRules('required')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field is required')
+      expect(formatErrorMessage('required', {}, ['required'])).toEqual('This field is required')
     })
 
     test('should return \'slug\' rule message', () => {
-      const rules = parseRules('slug')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field may only contain lowercase letters, numbers and dashes')
+      expect(formatErrorMessage('slug', {}, ['slug'])).toEqual('This field may only contain lowercase letters, numbers and dashes')
     })
 
     test('should return \'string\' rule message', () => {
-      const rules = parseRules('string')
-
-      expect(formatErrorMessage(rules[0], rules)).toEqual('This field must be a string')
+      expect(formatErrorMessage('string', {}, ['string'])).toEqual('This field must be a string')
     })
   })
 })

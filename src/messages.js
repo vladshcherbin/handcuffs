@@ -1,30 +1,16 @@
+import pupa from 'pupa'
 import messages from './messages/en'
 import { getRuleValueType } from './rules'
-
-const replacers = {
-  between: (message, params) => message.replace(':min', params[0]).replace(':max', params[1]),
-  max: (message, params) => message.replace(':max', params[0]),
-  min: (message, params) => message.replace(':min', params[0])
-}
 
 export function addMessage(title, message) {
   messages[title] = message
 }
 
-function replacePlaceholders(message, title, params) {
-  const replacerFunction = replacers[title]
-
-  return replacerFunction
-    ? replacerFunction(message, params)
-    : message
-}
-
-export function formatErrorMessage(rule, rules) {
-  const { title, params } = rule
-  const errorMessage = messages[title]
+export function formatErrorMessage(rule, params, rules) {
+  const errorMessage = messages[rule]
 
   if (!errorMessage) {
-    throw new Error(`There is no defined error message for '${title}' rule`)
+    throw new Error(`There is no defined error message for '${rule}' rule`)
   }
 
   if (!rules) {
@@ -34,8 +20,8 @@ export function formatErrorMessage(rule, rules) {
   if (typeof errorMessage === 'object') {
     const ruleValueType = getRuleValueType(rules)
 
-    return replacePlaceholders(errorMessage[ruleValueType], title, params)
+    return pupa(errorMessage[ruleValueType], params)
   }
 
-  return replacePlaceholders(errorMessage, title, params)
+  return pupa(errorMessage, params)
 }
