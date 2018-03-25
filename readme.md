@@ -63,7 +63,7 @@ The field under validation must be `'yes'`, `'on'`, `1`, or `true`.
 **alpha**
 
 ```js
-{ name: 'alpha' }
+{ name: [rules.alpha()] }
 ```
 
 The field under validation must be entirely alphabetic characters.
