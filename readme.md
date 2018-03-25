@@ -119,7 +119,7 @@ The field under validation must be formatted as an e-mail address.
 **max**
 
 ```js
-{ password: 'max:10' }
+{ password: [rules.max(10)] }
 ```
 
 The field under validation must be less than or equal to the given *max* value.

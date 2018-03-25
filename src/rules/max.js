@@ -1,9 +1,16 @@
-import { checkRuleParamsCount, getValueSize } from '../rules'
+import { getValueSize } from '../rules'
 
-export default function max(value, params, rules) {
-  checkRuleParamsCount(params, 1, 'max')
+export default (param) => {
+  if (!param) {
+    throw new Error('max rule param was not set')
+  }
 
-  const valueSize = getValueSize(value, rules)
+  return function max(value, rules) {
+    const valueSize = getValueSize(value, rules)
 
-  return valueSize <= params[0]
+    return {
+      valid: valueSize <= param,
+      params: { max: param }
+    }
+  }
 }
