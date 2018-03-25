@@ -71,7 +71,7 @@ The field under validation must be entirely alphabetic characters.
 **alphaNum**
 
 ```js
-{ password: 'alphaNum' }
+{ password: [rules.alphaNum()] }
 ```
 
 The field under validation must be entirely alpha-numeric characters.
