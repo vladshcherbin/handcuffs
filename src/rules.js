@@ -1,3 +1,4 @@
+import isNumber from 'is-number'
 import { addMessage } from './messages'
 import accepted from './rules/accepted'
 import alpha from './rules/alpha'
@@ -48,43 +49,20 @@ export function addRule(title, ruleFunction, message) {
   addMessage(title, message)
 }
 
-export function parseRules(rules) {
-  return rules.split('|').map((rule) => {
-    const [title, params] = rule.split(':')
-
-    return {
-      title,
-      params: params ? params.split(',') : []
-    }
-  })
-}
-
-export function mandatoryRule(rule, value) {
-  if (mandatoryRules.includes(rule)) {
+function mandatoryRule(rule, value) {
+  if (mandatoryRules.includes(rule.name)) {
     return true
   }
 
   return value !== undefined
 }
 
-export function getRuleValidationFunction(rule) {
-  const validationFunction = validationRules[rule]
-
-  if (!validationFunction) {
-    throw new Error(`No validation function was defined for '${rule}' rule`)
-  }
-
-  return validationFunction
-}
-
 function rulesContain(rules, rulesToFind) {
-  const ruleTitlesArray = rules.map(rule => rule.title)
-
   if (Array.isArray(rulesToFind)) {
     let ruleWasFound = false
 
     for (let i = 0; i < rulesToFind.length; i += 1) {
-      if (ruleTitlesArray.includes(rulesToFind[i])) {
+      if (rules.includes(rulesToFind[i])) {
         ruleWasFound = true
 
         break
@@ -94,14 +72,14 @@ function rulesContain(rules, rulesToFind) {
     return ruleWasFound
   }
 
-  return ruleTitlesArray.includes(rulesToFind)
+  return rules.includes(rulesToFind)
 }
 
 function rulesContainNumericRules(rules) {
   return rulesContain(rules, numericRules)
 }
 
-export function getRuleValueType(rules) {
+function getRuleValueType(rules) {
   if (rulesContainNumericRules(rules)) {
     return 'numeric'
   }
@@ -113,14 +91,8 @@ export function getRuleValueType(rules) {
   return 'string'
 }
 
-export function checkRuleParamsCount(params, requiredParamsCount, rule) {
-  if (!Array.isArray(params) || params.length < requiredParamsCount) {
-    throw new Error(`'${rule}' rule requires at least ${requiredParamsCount} parameters`)
-  }
-}
-
-export function getValueSize(value, rules) {
-  if (numeric(value) && rules && rulesContainNumericRules(rules)) {
+function getValueSize(value, rules) {
+  if (isNumber(value) && rulesContainNumericRules(rules)) {
     return Number(value)
   }
 
@@ -129,4 +101,11 @@ export function getValueSize(value, rules) {
   }
 
   return String(value).trim().length
+}
+
+export {
+  getRuleValueType,
+  getValueSize,
+  mandatoryRule,
+  validationRules as rules
 }

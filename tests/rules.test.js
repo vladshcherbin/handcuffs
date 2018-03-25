@@ -1,11 +1,9 @@
 import {
   addRule,
-  checkRuleParamsCount,
-  getRuleValidationFunction,
   getRuleValueType,
   getValueSize,
   mandatoryRule,
-  parseRules
+  rules
 } from '../src/rules'
 
 describe('Rules', () => {
@@ -30,103 +28,66 @@ describe('Rules', () => {
   })
 
   test('should add new rule', () => {
-    const customRuleFunction = () => false
+    const customRuleFunction = () => function custom() { return false }
 
     addRule('custom', customRuleFunction, 'Custom rule message')
 
-    expect(getRuleValidationFunction('custom')).toEqual(customRuleFunction)
-  })
-
-  test('should parse single rule', () => {
-    expect(parseRules('required')).toEqual([{ title: 'required', params: [] }])
-  })
-
-  test('should parse single rule with single param', () => {
-    expect(parseRules('age:18')).toEqual([{ title: 'age', params: ['18'] }])
-  })
-
-  test('should parse single rule with multiple params', () => {
-    expect(parseRules('between:2,7')).toEqual([{ title: 'between', params: ['2', '7'] }])
-  })
-
-  test('should parse multiple rules', () => {
-    expect(parseRules('required|between:2,7')).toEqual([
-      { title: 'required', params: [] },
-      { title: 'between', params: ['2', '7'] }
-    ])
+    expect(rules.custom).toEqual(customRuleFunction)
   })
 
   test('should pass \'required\' mandatory rule with value', () => {
-    expect(mandatoryRule('required', '')).toEqual(true)
+    expect(mandatoryRule(rules.required(), '')).toEqual(true)
   })
 
   test('should pass \'required\' mandatory rule without value', () => {
-    expect(mandatoryRule('required')).toEqual(true)
+    expect(mandatoryRule(rules.required())).toEqual(true)
   })
 
   test('should pass mandatory rule with value', () => {
-    expect(mandatoryRule('string', '')).toEqual(true)
+    expect(mandatoryRule(rules.string(), '')).toEqual(true)
   })
 
   test('should pass mandatory rule without value', () => {
-    expect(mandatoryRule('string')).toEqual(false)
-  })
-
-  test('should not throw when validation function for rule is defined', () => {
-    expect(() => getRuleValidationFunction('required')).not.toThrow()
-  })
-
-  test('should throw when validation function for rule is not defined', () => {
-    expect(() => getRuleValidationFunction('fake'))
-      .toThrow('No validation function was defined for \'fake\' rule')
+    expect(mandatoryRule(rules.string())).toEqual(false)
   })
 
   test('should detect numeric value type', () => {
-    expect(getRuleValueType(parseRules('required|numeric|min:3'))).toEqual('numeric')
+    expect(getRuleValueType(['required', 'numeric', 'min'])).toEqual('numeric')
   })
 
   test('should detect array value type', () => {
-    expect(getRuleValueType(parseRules('required|array|min:3'))).toEqual('array')
+    expect(getRuleValueType(['required', 'array', 'min'])).toEqual('array')
   })
 
   test('should detect string value type', () => {
-    expect(getRuleValueType(parseRules('required|min:3'))).toEqual('string')
-  })
-
-  test('should not throw when rule params count is enough', () => {
-    expect(() => checkRuleParamsCount([1, 3], 2, 'between')).not.toThrow()
-  })
-
-  test('should throw when rule params count is not enough', () => {
-    expect(() => checkRuleParamsCount([1], 2, 'between'))
-      .toThrow('\'between\' rule requires at least 2 parameters')
+    expect(getRuleValueType(['required', 'min'])).toEqual('string')
   })
 
   test('should detect string value size', () => {
-    expect(getValueSize('ab3', parseRules('required|min:3'))).toEqual(3)
+    expect(getValueSize('ab3', ['required', 'min'])).toEqual(3)
   })
 
   test('should detect numeric string value size without numeric rules', () => {
-    expect(getValueSize('12', parseRules('required|min:3'))).toEqual(2)
+    expect(getValueSize('12', ['required', 'min'])).toEqual(2)
   })
 
   test('should detect numeric string value size with numeric rules', () => {
-    expect(getValueSize('12', parseRules('required|numeric|min:3'))).toEqual(12)
+    expect(getValueSize('12', ['required', 'numeric', 'min'])).toEqual(12)
   })
 
   test('should detect number value size without numeric rules', () => {
-    expect(getValueSize(15, parseRules('required|min:3'))).toEqual(2)
+    expect(getValueSize(15, ['required', 'min'])).toEqual(2)
   })
 
   test('should detect number value size with numeric rules', () => {
-    expect(getValueSize(15, parseRules('required|numeric|min:3'))).toEqual(15)
+    expect(getValueSize(15, ['required', 'numeric', 'min'])).toEqual(15)
   })
 
   test('should detect empty array size', () => {
-    expect(getValueSize([], parseRules('required|min:3'))).toEqual(0)
+    expect(getValueSize([], ['required', 'min'])).toEqual(0)
   })
 
   test('should detect non-empty array size', () => {
-    expect(getValueSize(['Jack'], parseRules('required|min:3'))).toEqual(1)
+    expect(getValueSize(['Jack'], ['required', 'min'])).toEqual(1)
   })
 })
