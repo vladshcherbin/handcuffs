@@ -103,7 +103,7 @@ The field under validation must have a size between the given *min* and *max* va
 **boolean**
 
 ```js
-{ isVisible: 'boolean' }
+{ isVisible: [rules.boolean()] }
 ```
 
 The field under validation must be a boolean. Accepted input values are `true` and `false`.
